@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { LunarPod, OpenDb } from '../Pod';
+import { toast } from 'react-toastify';
 
 let MoonbaseServerUrl = 'http://0.0.0.0:3000/api/v0';
 
@@ -22,12 +23,22 @@ const callPostPods = async (podId: string, component: string) => {
 }
 
 const callPostOpen = async (podId: string, dbName: string, dbType: string) => {
-    const response = await axios.post(`${MoonbaseServerUrl}/open`, {
+  let response;
+  try { 
+     response = await axios.post(`${MoonbaseServerUrl}/open`, {
         id: podId,
         dbName: dbName,
         dbType: dbType
     });
-    return response.data;
+  }
+  catch (error) {
+    toast.error(`Error opening database: ${error}`);
+  }
+  if (response?.data?.has) {
+    toast.error(`Error opening database: ${response.data.error}`);
+  }
+
+  return response ? response?.data : null;
 }
 
 

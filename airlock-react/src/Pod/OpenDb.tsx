@@ -58,7 +58,6 @@ export const OpenDb: React.FC = () => {
                                 address: db.address
                             };
                             currentOpenDbs.push(openDb);
-                            
                         }
                     }
                     catch (error) {
@@ -77,7 +76,7 @@ export const OpenDb: React.FC = () => {
 
     return (
         <div className="Moonbase-dashboard-opendbs">
-            <h2>Open Databases</h2>
+            <h3>Open Databases</h3>
 
             <table>
                 <thead>
