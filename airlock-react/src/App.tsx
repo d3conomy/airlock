@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import logo from './d3logo-bw2.svg';
+import logo from './d3logo-bw.svg';
 import './App.css';
 import { PodBayDashboard } from './Dashboard';
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 const MoonbaseServerUrl = 'http://0.0.0.0:3000/api/v0';
 
@@ -12,43 +12,42 @@ const callGetPods = async () => {
 
 export const PodBayDashboard: React.FC = () => {
   const [podId, setPodId] = useState('');
+  const [ component, setComponent ] = useState('' as string);
   const [message, setMessage] = useState('');
   const [ pods, setPods ] = useState([]);
+  const [serverConnection, setServerConnection] = useState(false);
 
-  const handleAddPod = () => {
+  const handleAddPod = async () => {
     // Add a pod
-    axios.post('http://0.0.0.0:3000/api/v0/pods', {
+    const addResponse: AxiosResponse = await axios.post(`${MoonbaseServerUrl}/pods`, {
+      data: {
+        id: podId,
+        component: component
+      }
+    });
+    setMessage(`Pod added: ${JSON.stringify(addResponse.data)}`);
+  };
+
+  const handleDeletePod = async () => {
+    // Delete a pod
+    const deleteResponse: AxiosResponse = await axios.delete(`${MoonbaseServerUrl}/pods`, {
       data: {
         id: podId
       }
-    })
-      .then(response => {
-        setMessage(`Pod created: ${JSON.stringify(response.data)}`);
-      })
-      .catch(error => {
-        setMessage(`Error creating pod: ${error}`);
-      });
-  };
-
-  const handleDeletePod = () => {
-
-    // Delete a pod
-    axios.delete(`http://0.0.0.0:3000/api/v0/pods`, {
-      data: {
-        id: podId
-        }
-      })
-      .then(response => {
-        setMessage(`Pod deleted: ${JSON.stringify(response.data)}`);
-      })
-      .catch(error => {
-        setMessage(`Error deleting pod: ${error}`);
-      });
-    }
+    
+    });
+    setMessage(`Pod deleted: ${JSON.stringify(deleteResponse.data)}`);
+  }
 
   const getPods = async () => {
-    const runningPods = await callGetPods();
-    setPods(runningPods);
+    try {
+      const runningPods = await callGetPods();
+      setPods(runningPods);
+      setServerConnection(true);
+    }
+    catch (error) {
+      setServerConnection(false);
+    }
   }
 
   useEffect(() => {
@@ -65,9 +64,13 @@ export const PodBayDashboard: React.FC = () => {
       </div>
 
       <div>
+        <h3>Server: {serverConnection ? 'Connected' : 'Disconnected'}</h3>
+      </div>
+
+      <div>
         <ul>
           {pods.map((pod: any, index: number) => {
-            return <li key={index}>{pod.pod.name}</li>
+            return <li key={index}>{pod.pod.name} | {pod.pod.component}</li>
           })}
         </ul>
         {/* {JSON.stringify(pods)} */}
@@ -82,6 +85,15 @@ export const PodBayDashboard: React.FC = () => {
             onChange={e => setPodId(e.target.value)}
             placeholder="Enter pod ID"
           />
+          {/* below is a drop down list with the options OrbitDb, Libp2p, or IPFS with default being OrbitDb*/}
+          <select
+            value={component}
+            onChange={e => setComponent(e.target.value)}
+          >
+            <option value="orbitdb">OrbitDb</option>
+            <option value="libp2p">Libp2p</option>
+            <option value="ipfs">IPFS</option>
+          </select>
         
           <button onClick={handleAddPod}>Add Pod</button>
           <button onClick={handleDeletePod}>Delete Pod</button>
