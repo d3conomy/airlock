@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
 import { MoonbaseServerUrl } from '../Dashboard';
+import { OpenDb } from './OpenDb';
 
 interface IdReference {
     name: string;
@@ -58,7 +59,7 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
 
     const handleDeletePod = async () => {
         // Delete a pod
-        const deleteResponse: AxiosResponse = await callDeletePods(lunarPod.pod.name);
+        const deleteResponse = await callDeletePods(lunarPod.pod.name);
         toast.success(`Pod deleted: ${JSON.stringify(deleteResponse)}`)
     }
 
@@ -121,7 +122,7 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
             })}</p>
             <ul>
                 {lunarPod.components?.map((component, index) => {
-                    if (component.id.component !== 'opendb') {
+                    // if (component.id.component !== 'opendb') {
                         return (
                             <li key={index}>
                                 <h3>{component.id?.component} | {component.id?.name}</h3>
@@ -130,7 +131,7 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                                 <p>Updated: {component.status?.updated}</p>
                             </li>
                         );
-                    }
+                    // }
                     // if (component.id.component === 'opendb') {
                         
                     // }

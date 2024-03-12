@@ -43,6 +43,11 @@
   background-color: #DDF95E;
 }
 
+.Moonbase-control-panel-container {
+  display: flex;
+  flex-direction: row;
+}
+
 .Moonbase-control-panel {
   border: 2px solid #8FA3A8;
   padding: 10px;
@@ -50,6 +55,8 @@
   background-color: #e7f8a0;
   text-align: left;
   max-width: 512px;
+  display: flex;
+  flex-direction: column;
 }
 
 .Moonbase-control-panel-output {
@@ -62,6 +69,15 @@
   background-color: #303030;
   text-align: left;
   max-width: 512px;
+}
+
+.Moonbase-dashboard-opendbs {
+  border: 2px solid #8FA3A8;
+  padding: 10px;
+  margin: 10px;
+  background-color: #e7f8a0;
+  text-align: left;
+  min-width: 512px;
 }
 
 .pod-bay-dashboard {

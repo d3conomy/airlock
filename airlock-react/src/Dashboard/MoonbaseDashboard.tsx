@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import { LunarPod } from '../Pod';
+import { LunarPod, OpenDb } from '../Pod';
 
 let MoonbaseServerUrl = 'http://0.0.0.0:3000/api/v0';
 
@@ -65,6 +65,7 @@ export const MoonbaseDashboard: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       getPods();
+      
     }, 1000);
 
     return () => clearInterval(interval);
@@ -75,9 +76,11 @@ export const MoonbaseDashboard: React.FC = () => {
     <div>
       <h1>Moonbase Dashboard</h1>
 
+      <div className="Moonbase-control-panel-container">
+
       <div className="Moonbase-control-panel">
 
-        <div> 
+        <div className="Moonbase-control-panel-server"> 
           <h3>Server: {serverConnection ? 'Connected' : 'Disconnected'}</h3>
           <input
             type="text"
@@ -87,7 +90,6 @@ export const MoonbaseDashboard: React.FC = () => {
             style={{ width: '300px' }}
           />
           <button onClick={() => setMoonbaseServerUrl(serverUrl)}>Reset</button>
-
         </div>
 
         <br />
@@ -144,6 +146,12 @@ export const MoonbaseDashboard: React.FC = () => {
     </div>
 
     <div>
+      {(pods.length > 0) ? <OpenDb /> : null}
+    </div>
+
+    </div>
+
+    <div>
         <h2>Pods</h2>
       </div>
 
@@ -155,6 +163,7 @@ export const MoonbaseDashboard: React.FC = () => {
         })}
       </div>
   </div>
+
   );
 };
 
