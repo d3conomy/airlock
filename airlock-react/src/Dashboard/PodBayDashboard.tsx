@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
+import { LunarPod } from '../Pod';
 
 const MoonbaseServerUrl = 'http://0.0.0.0:3000/api/v0';
 
@@ -8,40 +9,49 @@ const callGetPods = async () => {
     return response.data;
 }
 
+const callPostPods = async (podId: string, component: string) => {
+    const response = await axios.post(`${MoonbaseServerUrl}/pods`, {
+        id: podId,
+        component: component
+    });
+    return response.data;
+}
+
+const callDeletePods = async (podId: string) => {
+    const response = await axios.delete(`${MoonbaseServerUrl}/pods`, {
+        data: {
+            id: podId
+        }
+    });
+    return response.data;
+}
+
 
 
 export const PodBayDashboard: React.FC = () => {
-  const [podId, setPodId] = useState('');
+  const [ podId, setPodId ] = useState('');
   const [ component, setComponent ] = useState('' as string);
-  const [message, setMessage] = useState('');
+  const [ message, setMessage ] = useState('');
   const [ pods, setPods ] = useState([]);
-  const [serverConnection, setServerConnection] = useState(false);
+  const [ serverConnection, setServerConnection ] = useState(false);
 
   const handleAddPod = async () => {
     // Add a pod
-    const addResponse: AxiosResponse = await axios.post(`${MoonbaseServerUrl}/pods`, {
-      data: {
-        id: podId,
-        component: component
-      }
-    });
-    setMessage(`Pod added: ${JSON.stringify(addResponse.data)}`);
+    const addResponse: AxiosResponse = await callPostPods(podId, component);
+    setMessage(`Pod added: ${JSON.stringify(addResponse)}`);
   };
 
   const handleDeletePod = async () => {
     // Delete a pod
-    const deleteResponse: AxiosResponse = await axios.delete(`${MoonbaseServerUrl}/pods`, {
-      data: {
-        id: podId
-      }
-    
-    });
-    setMessage(`Pod deleted: ${JSON.stringify(deleteResponse.data)}`);
+    const deleteResponse: AxiosResponse = await callDeletePods(podId);
+    setMessage(`Pod deleted: ${JSON.stringify(deleteResponse)}`);
   }
 
   const getPods = async () => {
+    let runningPods: any;
+    let timePodsRetrieved: Date;
     try {
-      const runningPods = await callGetPods();
+      runningPods = await callGetPods();
       setPods(runningPods);
       setServerConnection(true);
     }
@@ -51,7 +61,11 @@ export const PodBayDashboard: React.FC = () => {
   }
 
   useEffect(() => {
-    getPods();
+    const interval = setInterval(() => {
+      getPods();
+    }, 5000);
+
+    return () => clearInterval(interval);
   });
 
 
@@ -69,11 +83,14 @@ export const PodBayDashboard: React.FC = () => {
 
       <div>
         <ul>
-          {pods.map((pod: any, index: number) => {
-            return <li key={index}>{pod.pod.name} | {pod.pod.component}</li>
+          {pods.map((pod, index) => {
+            return (
+              <li key={index}>
+                <LunarPod lunarPod={pod} />
+              </li>
+            );
           })}
         </ul>
-        {/* {JSON.stringify(pods)} */}
       </div>
 
       <div>
@@ -85,7 +102,6 @@ export const PodBayDashboard: React.FC = () => {
             onChange={e => setPodId(e.target.value)}
             placeholder="Enter pod ID"
           />
-          {/* below is a drop down list with the options OrbitDb, Libp2p, or IPFS with default being OrbitDb*/}
           <select
             value={component}
             onChange={e => setComponent(e.target.value)}
