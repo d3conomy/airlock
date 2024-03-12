@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { LunarPod } from '../Pod';
 
-const MoonbaseServerUrl = 'http://0.0.0.0:3000/api/v0';
+let MoonbaseServerUrl = 'http://0.0.0.0:3000/api/v0';
+
+const setMoonbaseServerUrl = (url: string) => {
+    MoonbaseServerUrl = url;
+}
 
 const callGetPods = async () => {
     const response = await axios.get(`${MoonbaseServerUrl}/pods`);
@@ -36,6 +40,7 @@ export const PodBayDashboard: React.FC = () => {
   const [ serverConnection, setServerConnection ] = useState(false);
   const [ dbName, setDbName ] = useState('');
   const [ dbType, setDbType ] = useState('');
+  const [ serverUrl, setServerUrl ] = useState(MoonbaseServerUrl);
 
   const handleAddPod = async () => {
     // Add a pod
@@ -72,10 +77,25 @@ export const PodBayDashboard: React.FC = () => {
 
       <div className="Moonbase-control-panel">
 
-        <h3>Server: {serverConnection ? 'Connected' : 'Disconnected'}</h3>
-        <button onClick={getPods}>Get Pods</button>
+        <div> 
+          <h3>Server: {serverConnection ? 'Connected' : 'Disconnected'}</h3>
+          <input
+            type="text"
+            value={serverUrl}
+            onChange={e => setServerUrl(e.target.value)}
+            placeholder={MoonbaseServerUrl}
+            style={{ width: '300px' }}
+          />
+          <button onClick={() => setMoonbaseServerUrl(serverUrl)}>Reset</button>
+
+        </div>
 
         <br />
+
+        <div>
+          <button onClick={getPods}>Get Pods</button>
+        </div>
+
         <br />
 
         <div>

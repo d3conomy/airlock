@@ -65,7 +65,7 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
     }
 
     const handleGetPodInfo = async () => {
-        const podId: string = lunarPod.pod.name;
+        const podId: string = lunarPod.pod?.name;
         const peerId: string = await callGetPodInfo(podId, 'peerid');
         const multiaddrs: string[] = await callGetPodInfo(podId, 'multiaddrs');
         const protocols: string[] = await callGetPodInfo(podId, 'protocols');
@@ -79,8 +79,14 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            if (lunarPod.pod.name) {
-                handleGetPodInfo();
+            try {
+
+                if (lunarPod.pod?.name) {
+                    handleGetPodInfo();
+                }
+            }
+            catch (error) {
+                console.error(error);
             }
         }, 1000);
 
