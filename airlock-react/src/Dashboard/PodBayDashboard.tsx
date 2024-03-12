@@ -81,16 +81,12 @@ export const PodBayDashboard: React.FC = () => {
         <h3>Server: {serverConnection ? 'Connected' : 'Disconnected'}</h3>
       </div>
 
-      <div>
-        <ul>
-          {pods.map((pod, index) => {
-            return (
-              <li key={index}>
-                <LunarPod lunarPod={pod} />
-              </li>
-            );
-          })}
-        </ul>
+      <div className="pod-bay-dashboard">
+        {pods.map((pod: any, index: number) => {
+          return (
+            <LunarPod key={index} lunarPod={pod} />
+          );
+        })}
       </div>
 
       <div>

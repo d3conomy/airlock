@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import logo from './d3logo-bw.svg';
 import './App.css';
 import { PodBayDashboard } from './Dashboard';
@@ -9,13 +8,18 @@ const App: React.FC = () => {
 
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" width="128" />
-      </header>
+    <div className="App" style={{ backgroundColor: 'grey' }}>
+
+      <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" width="128" />
+      </div>
 
       <div>
         <PodBayDashboard />
+      </div>
+
+      <div className="App-footer">
+        <p>d3</p>
       </div>
     </div>
   );

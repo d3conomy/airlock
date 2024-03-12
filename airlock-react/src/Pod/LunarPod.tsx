@@ -28,13 +28,20 @@ interface LunarPodProps {
 
 export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
     return (
-        <div>
-            <h2>Lunar Pod | ${lunarPod.pod.name}</h2>
+        <div style={{
+            border: '1px solid black',
+            padding: '10px',
+            margin: '10px',
+            backgroundColor: 'lightgrey',
+            textAlign: 'left',
+            maxWidth: '512px'
+        }}>
+            <h2 style={{ textAlign: "center" }}>{lunarPod.pod.name}</h2>
             <ul>
                 {lunarPod.components.map((component, index) => {
                     return (
                         <li key={index}>
-                            <h3>Component: {component.id?.component}</h3>
+                            <h3>{component.id?.component}</h3>
                             <p>Status: {component.status?.stage}</p>
                             <p>Message: {component.status?.message}</p>
                             <p>Updated: {component.status?.updated}</p>
