@@ -11,15 +11,7 @@ const App: React.FC = () => {
     <div className="App" style={{ backgroundColor: 'grey' }}>
 
       <div className="App-header">
-          {/* <img src={logo} className="App-logo" alt="logo" width="128" /> */}
-          <div className="glitch">
-            <img src={logo} alt="" width="180px" />
-            <div className="glitch__layers">
-              <div className="glitch__layer"></div>
-              <div className="glitch__layer"></div>
-              <div className="glitch__layer"></div>
-            </div>
-          </div>
+          <img src={logo} className="App-logo" alt="logo" width="128" />
       </div>
 
       <div>

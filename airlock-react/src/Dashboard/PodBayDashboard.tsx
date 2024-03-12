@@ -17,14 +17,7 @@ const callPostPods = async (podId: string, component: string) => {
     return response.data;
 }
 
-const callDeletePods = async (podId: string) => {
-    const response = await axios.delete(`${MoonbaseServerUrl}/pods`, {
-        data: {
-            id: podId
-        }
-    });
-    return response.data;
-}
+
 
 const callPostOpen = async (podId: string, dbName: string, dbType: string) => {
     const response = await axios.post(`${MoonbaseServerUrl}/open`, {
@@ -52,11 +45,7 @@ export const PodBayDashboard: React.FC = () => {
     setMessage(`Pod added: ${JSON.stringify(addResponse)}`);
   };
 
-  const handleDeletePod = async () => {
-    // Delete a pod
-    const deleteResponse: AxiosResponse = await callDeletePods(podId);
-    setMessage(`Pod deleted: ${JSON.stringify(deleteResponse)}`);
-  }
+
 
   const getPods = async () => {
     let runningPods: any;
@@ -74,7 +63,7 @@ export const PodBayDashboard: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       getPods();
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(interval);
   });
@@ -82,26 +71,23 @@ export const PodBayDashboard: React.FC = () => {
 
   return (
     <div>
-      <h1>PodBay Dashboard</h1>
+      <h1>Moonbase Dashboard</h1>
 
-      <div>
-        <h2>Pods</h2>
-      </div>
+      <div style={{
+            border: '1px solid black',
+            padding: '10px',
+            margin: '10px',
+            backgroundColor: 'lightgrey',
+            textAlign: 'left',
+            maxWidth: '512px'
+        }}>
 
-      <div>
         <h3>Server: {serverConnection ? 'Connected' : 'Disconnected'}</h3>
-      </div>
-
-      <div className="pod-bay-dashboard">
-        {pods.map((pod: any, index: number) => {
-          return (
-            <LunarPod key={index} lunarPod={pod} />
-          );
-        })}
-      </div>
-
-      <div>
         <button onClick={getPods}>Get Pods</button>
+
+        <br />
+        <br />
+
         <div>
           <input
             type="text"
@@ -119,7 +105,7 @@ export const PodBayDashboard: React.FC = () => {
           </select>
         
           <button onClick={handleAddPod}>Add Pod</button>
-          <button onClick={handleDeletePod}>Delete Pod</button>
+
 
           <br />
           <br />
@@ -146,6 +132,18 @@ export const PodBayDashboard: React.FC = () => {
       <div>{message}</div>
       
     </div>
+
+    <div>
+        <h2>Pods</h2>
+      </div>
+
+      <div className="pod-bay-dashboard">
+        {pods.map((pod: any, index: number) => {
+          return (
+            <LunarPod key={index} lunarPod={pod} />
+          );
+        })}
+      </div>
   </div>
   );
 };
