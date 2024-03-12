@@ -26,6 +26,15 @@ const callDeletePods = async (podId: string) => {
     return response.data;
 }
 
+const callPostOpen = async (podId: string, dbName: string, dbType: string) => {
+    const response = await axios.post(`${MoonbaseServerUrl}/open`, {
+        id: podId,
+        dbName: dbName,
+        dbType: dbType
+    });
+    return response.data;
+}
+
 
 
 export const PodBayDashboard: React.FC = () => {
@@ -34,6 +43,8 @@ export const PodBayDashboard: React.FC = () => {
   const [ message, setMessage ] = useState('');
   const [ pods, setPods ] = useState([]);
   const [ serverConnection, setServerConnection ] = useState(false);
+  const [ dbName, setDbName ] = useState('');
+  const [ dbType, setDbType ] = useState('');
 
   const handleAddPod = async () => {
     // Add a pod
@@ -109,6 +120,27 @@ export const PodBayDashboard: React.FC = () => {
         
           <button onClick={handleAddPod}>Add Pod</button>
           <button onClick={handleDeletePod}>Delete Pod</button>
+
+          <br />
+          <br />
+
+          <input
+            type="text"
+            value={dbName}
+            onChange={e => setDbName(e.target.value)}
+            placeholder="Enter database name"
+          />
+          <select
+            value={dbType}
+            onChange={e => setDbType(e.target.value)}
+          >
+            <option value="keyvalue">Key/Value</option>
+            <option value="events">Event Log</option>
+            <option value="documents">Docstore</option>
+          </select>
+
+          <button onClick={() => callPostOpen(podId, dbName, dbType)}>Open Database</button>
+          
         </div>
 
       <div>{message}</div>
