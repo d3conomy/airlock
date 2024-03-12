@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-
-
-const MoonbaseServerUrl = 'http://0.0.0.0:3000/api/v0';
+import { MoonbaseServerUrl } from '../Dashboard';
 
 interface IdReference {
     name: string;
@@ -81,8 +79,10 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
         const interval = setInterval(() => {
             try {
 
-                if (lunarPod.pod?.name) {
-                    handleGetPodInfo();
+                if (lunarPod.pod?.name !== '') {
+                    handleGetPodInfo().catch((error) => {
+                        console.error(error);
+                    })
                 }
             }
             catch (error) {
@@ -109,18 +109,18 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                 <button onClick={handleDeletePod}>Delete Pod</button>
             </div>
 
-            <p>Peer Id: {info.peerId}</p>
-            <p>Multiaddrs: {info.multiaddrs.map((addr) =>{
-                return <span>{addr}<br/></span>
+            <p>Peer Id: {info?.peerId}</p>
+            <p>Multiaddrs: {info.multiaddrs?.map((addr, index) =>{
+                return <span key={index}>{addr}<br/></span>
             })}</p>
             <p>Protocols: 
                 <br />
-                {info.protocols.map((protocol) =>{
-                return <span>{protocol}<br/></span>
+                {info.protocols?.map((protocol, index) =>{
+                return <span key={index}>{protocol}<br/></span>
 
             })}</p>
             <ul>
-                {lunarPod.components.map((component, index) => {
+                {lunarPod.components?.map((component, index) => {
                     if (component.id.component !== 'opendb') {
                         return (
                             <li key={index}>
@@ -131,9 +131,9 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                             </li>
                         );
                     }
-                    if (component.id.component === 'opendb') {
+                    // if (component.id.component === 'opendb') {
                         
-                    }
+                    // }
                 })}
             </ul>
         </div>

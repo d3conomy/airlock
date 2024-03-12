@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import logo from './d3logo-green.svg';
 import './App.css';
-import { PodBayDashboard } from './Dashboard';
+import { MoonbaseDashboard } from './Dashboard';
 
 
 const App: React.FC = () => {
@@ -15,7 +15,7 @@ const App: React.FC = () => {
       </div>
 
       <div>
-        <PodBayDashboard />
+        <MoonbaseDashboard />
       </div>
 
       <div className="App-footer">

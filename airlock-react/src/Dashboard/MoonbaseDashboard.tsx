@@ -32,7 +32,7 @@ const callPostOpen = async (podId: string, dbName: string, dbType: string) => {
 
 
 
-export const PodBayDashboard: React.FC = () => {
+export const MoonbaseDashboard: React.FC = () => {
   const [ podId, setPodId ] = useState('');
   const [ component, setComponent ] = useState('' as string);
   const [ message, setMessage ] = useState('');
@@ -157,3 +157,8 @@ export const PodBayDashboard: React.FC = () => {
   </div>
   );
 };
+
+export {
+  MoonbaseServerUrl,
+  setMoonbaseServerUrl
+}

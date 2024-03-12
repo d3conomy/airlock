@@ -1,1 +1,1 @@
-export * from "./PodBayDashboard"
+export * from "./MoonbaseDashboard"
