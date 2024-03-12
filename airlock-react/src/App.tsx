@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from './d3logo-bw.svg';
+import logo from './d3logo-green.svg';
 import './App.css';
 import { PodBayDashboard } from './Dashboard';
 

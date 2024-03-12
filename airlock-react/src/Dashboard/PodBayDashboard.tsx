@@ -17,8 +17,6 @@ const callPostPods = async (podId: string, component: string) => {
     return response.data;
 }
 
-
-
 const callPostOpen = async (podId: string, dbName: string, dbType: string) => {
     const response = await axios.post(`${MoonbaseServerUrl}/open`, {
         id: podId,
@@ -42,14 +40,13 @@ export const PodBayDashboard: React.FC = () => {
   const handleAddPod = async () => {
     // Add a pod
     const addResponse: AxiosResponse = await callPostPods(podId, component);
-    setMessage(`Pod added: ${JSON.stringify(addResponse)}`);
+    setMessage(`${JSON.stringify(addResponse)}`);
   };
 
 
 
   const getPods = async () => {
     let runningPods: any;
-    let timePodsRetrieved: Date;
     try {
       runningPods = await callGetPods();
       setPods(runningPods);
@@ -73,14 +70,7 @@ export const PodBayDashboard: React.FC = () => {
     <div>
       <h1>Moonbase Dashboard</h1>
 
-      <div style={{
-            border: '1px solid black',
-            padding: '10px',
-            margin: '10px',
-            backgroundColor: 'lightgrey',
-            textAlign: 'left',
-            maxWidth: '512px'
-        }}>
+      <div className="Moonbase-control-panel">
 
         <h3>Server: {serverConnection ? 'Connected' : 'Disconnected'}</h3>
         <button onClick={getPods}>Get Pods</button>
@@ -129,7 +119,7 @@ export const PodBayDashboard: React.FC = () => {
           
         </div>
 
-      <div>{message}</div>
+      <div className="Moonbase-control-panel-output">{message}</div>
       
     </div>
 

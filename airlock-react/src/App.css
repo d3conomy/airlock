@@ -38,6 +38,32 @@
   }
 }
 
+.Moonbase-logo-color-container {
+  border: 5px solid #8FA3A8;
+  background-color: #DDF95E;
+}
+
+.Moonbase-control-panel {
+  border: 2px solid #8FA3A8;
+  padding: 10px;
+  margin: 10px;
+  background-color: #e7f8a0;
+  text-align: left;
+  max-width: 512px;
+}
+
+.Moonbase-control-panel-output {
+  border: 2px solid #8FA3A8;
+  color: #DDF95E;
+  font-family: monospace;
+  font-size: small;
+  padding: 10px;
+  margin: 10px;
+  background-color: #303030;
+  text-align: left;
+  max-width: 512px;
+}
+
 .pod-bay-dashboard {
   display: flex;
 }
