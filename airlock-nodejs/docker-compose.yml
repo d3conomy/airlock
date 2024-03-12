@@ -1,7 +1,7 @@
 services:
   airlock:
-    container_name: moonbase-v0.0.1
-    image: moonbase:latest
+    container_name: airlock-v0.0.1
+    image: airlock:latest
     build:
       context: .
       dockerfile: Dockerfile
