@@ -50,12 +50,24 @@ const callGetPodInfo = async (podId: string, info: string) => {
     return response.data;
 }
 
+const callPostPod = async (podId: string, command: string, args: any) => {
+    console.log(`Command: ${command} Args: ${args}, PodId: ${podId}`)
+    const response = await axios.post(`${MoonbaseServerUrl}/pod/${podId}`, {
+            command: command,
+            args: args as any
+        })
+    console.log(response.data)
+    return response.data;
+}
+
 export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
     const [info, setInfo] = useState<LunarPodInfo>({
         peerId: '',
         multiaddrs: [],
         protocols: []
     });
+    const [ postCommand, setPostCommand ] = useState<string>('dial');
+    const [ args, setArgs ] = useState<string>('{"address": "/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"}');
 
     const handleDeletePod = async () => {
         // Delete a pod
@@ -74,6 +86,13 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
             multiaddrs: multiaddrs,
             protocols: protocols
         });
+    }
+
+    const handlePostPod = async () => {
+        console.log(`Command: ${postCommand} Args: ${args}`)
+        const response = await callPostPod(lunarPod.pod?.name, postCommand, args);
+        toast.success(`Command sent: ${JSON.stringify(response)}`);
+        return response
     }
 
     useEffect(() => {
@@ -107,6 +126,25 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
             <h2 style={{ textAlign: "center" }}>{lunarPod.pod.name}</h2>
 
             <div>
+                
+                <select
+                    value={postCommand ? postCommand : 'dial'}
+                    onChange={e => setPostCommand(e.target.value)}
+                    style={{ width: '128px' }}
+                >
+                    <option value="dial">dial</option>
+                    <option value="dialprotocol">dial protocol</option>
+                    <option value="addjson">add json</option>
+                    <option value="getjson">get json</option>
+                </select>
+                <input
+                    type="text"
+                    value={args ? args : "{'address': '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'}"}
+                    onChange={e => setArgs(e.target.value)}
+                    placeholder="{'address': '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'}"
+                    style={{ width: '300px' }}
+                />
+                <button onClick={handlePostPod}>Send Command</button>
                 <button onClick={handleDeletePod}>Delete Pod</button>
             </div>
 
