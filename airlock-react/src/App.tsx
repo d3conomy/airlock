@@ -5,8 +5,6 @@ import { MoonbaseDashboard } from './Dashboard';
 
 
 const App: React.FC = () => {
-
-
   return (
     <div className="App" style={{ backgroundColor: 'grey' }}>
 

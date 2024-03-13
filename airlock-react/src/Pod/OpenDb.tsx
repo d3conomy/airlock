@@ -25,10 +25,8 @@ const callGetDb = async (dbName: string) => {
 
 const callPostDb = async (dbName: string, command: string, args: any) => {
     const response = await axios.post(`${MoonbaseServerUrl}/db/${dbName}`, {
-        post: {
-            command: command,
-            args: args
-        }
+        command: command,
+        args: args
     });
     return response.data;
 }

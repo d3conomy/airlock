@@ -36,6 +36,14 @@ interface LunarPodInfo {
 
 }
 
+interface PostPodRequestArgs {
+    address?: string;
+    protocol?: string;
+    data?: {
+        name: string;
+    }
+}
+
 const callDeletePods = async (podId: string) => {
     const response = await axios.delete(`${MoonbaseServerUrl}/pods`, {
         data: {
@@ -50,11 +58,11 @@ const callGetPodInfo = async (podId: string, info: string) => {
     return response.data;
 }
 
-const callPostPod = async (podId: string, command: string, args: any) => {
+const callPostPod = async (podId: string, command: string, args: PostPodRequestArgs) => {
     console.log(`Command: ${command} Args: ${args}, PodId: ${podId}`)
     const response = await axios.post(`${MoonbaseServerUrl}/pod/${podId}`, {
             command: command,
-            args: args as any
+            args: args 
         })
     console.log(response.data)
     return response.data;
@@ -67,7 +75,9 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
         protocols: []
     });
     const [ postCommand, setPostCommand ] = useState<string>('dial');
-    const [ args, setArgs ] = useState<string>('{"address": "/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"}');
+    const [ args, setArgs ] = useState<PostPodRequestArgs>({
+        address: "/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"
+    });
 
     const handleDeletePod = async () => {
         // Delete a pod
@@ -137,13 +147,44 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                     <option value="addjson">add json</option>
                     <option value="getjson">get json</option>
                 </select>
-                <input
-                    type="text"
-                    value={args ? args : "{'address': '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'}"}
-                    onChange={e => setArgs(e.target.value)}
-                    placeholder="{'address': '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'}"
-                    style={{ width: '300px' }}
-                />
+                {postCommand === 'dial' || postCommand === "dialprotocol" ? 
+                    <input
+                        type="text"
+                        value={args.address}
+                        onChange={e => setArgs({
+                            address: e.target.value,
+                            protocol: args.protocol
+                        })}
+                        style={{ width: '300px' }}
+                    />
+                : null}
+                {postCommand === 'dialprotocol' ?
+                    <input
+                        type="text"
+                        value={args.protocol}
+                        onChange={e => setArgs({ 
+                            address: args.address,
+                            protocol: e.target.value
+                        })}
+                        style={{ width: '300px' }}
+                    />
+                : null}
+                {postCommand === 'addjson' ? 
+                    <input
+                        type="text"
+                        value={args.data?.name}
+                        onChange={e => setArgs({ data: { name: e.target.value } })}
+                        style={{ width: '300px' }}
+                    />
+                : null}
+                {postCommand === 'getjson' ?
+                    <input
+                        type="text"
+                        value={args.data?.name}
+                        onChange={e => setArgs({ data: { name: e.target.value } })}
+                        style={{ width: '300px' }}
+                    />
+                : null}
                 <button onClick={handlePostPod}>Send Command</button>
                 <button onClick={handleDeletePod}>Delete Pod</button>
             </div>
