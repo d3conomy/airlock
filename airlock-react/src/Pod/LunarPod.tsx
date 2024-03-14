@@ -40,7 +40,8 @@ interface PostPodRequestArgs {
     address?: string;
     protocol?: string;
     data?: {
-        name: string;
+        name?: string;
+        cid?: string;
     }
 }
 
@@ -180,8 +181,8 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                 {postCommand === 'getjson' ?
                     <input
                         type="text"
-                        value={args.data?.name}
-                        onChange={e => setArgs({ data: { name: e.target.value } })}
+                        value={args.data?.cid}
+                        onChange={e => setArgs({ data: { cid: e.target.value } })}
                         style={{ width: '300px' }}
                     />
                 : null}
