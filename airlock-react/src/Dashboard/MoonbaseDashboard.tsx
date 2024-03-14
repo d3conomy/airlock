@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { LunarPod, OpenDb } from '../Pod';
 import { toast } from 'react-toastify';
+import { Logs } from './Logs';
 
 let MoonbaseServerUrl = 'http://0.0.0.0:3000/api/v0';
 
@@ -152,8 +153,11 @@ export const MoonbaseDashboard: React.FC = () => {
           
         </div>
 
-      <div className="Moonbase-control-panel-output">{message}</div>
-      
+      {/* <div className="Moonbase-control-panel-output">{message}</div> */}
+
+      <div className="Moonbase-control-panel-output">
+        <Logs />
+      </div>
     </div>
 
     <div>
