@@ -4,7 +4,7 @@ import { LunarPod, OpenDb } from '../Pod';
 import { toast } from 'react-toastify';
 import { Logs } from './Logs';
 
-let MoonbaseServerUrl = 'http://0.0.0.0:3000/api/v0';
+let MoonbaseServerUrl = 'http://0.0.0.0:4343/api/v0';
 
 const setMoonbaseServerUrl = (url: string) => {
     MoonbaseServerUrl = url;

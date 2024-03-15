@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const moonbaseUrl = 'http://0.0.0.0:3000/api/v0';
+const moonbaseUrl = 'http://0.0.0.0:4343/api/v0';
 
 const ping = async () => {
     const response = await axios.get(`${moonbaseUrl}/ping`);

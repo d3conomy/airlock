@@ -17,7 +17,7 @@ RUN npm run build
 
 COPY ./entrypoint.sh ./entrypoint.sh
 
-EXPOSE 3000
+EXPOSE 4343
 
 CMD ["node", "./dist/index.js", "--trace-deprecation", "--trace-warnings"]
 

@@ -60,12 +60,10 @@ const callGetPodInfo = async (podId: string, info: string) => {
 }
 
 const callPostPod = async (podId: string, command: string, args: PostPodRequestArgs) => {
-    console.log(`Command: ${command} Args: ${args}, PodId: ${podId}`)
     const response = await axios.post(`${MoonbaseServerUrl}/pod/${podId}`, {
             command: command,
             args: args 
         })
-    console.log(response.data)
     return response.data;
 }
 
@@ -100,7 +98,6 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
     }
 
     const handlePostPod = async () => {
-        console.log(`Command: ${postCommand} Args: ${args}`)
         const response = await callPostPod(lunarPod.pod?.name, postCommand, args);
         toast.success(`Command sent: ${JSON.stringify(response)}`);
         return response

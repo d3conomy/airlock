@@ -2,14 +2,23 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { MoonbaseServerUrl } from './MoonbaseDashboard';
 
-interface IIdRef {
+
+/**
+ * This is the interface for the Id reference object that is returned from the Moonbase server.
+ * @category API
+*/
+interface IIdRefApi {
     name: string;
     component: string;
 }
 
-interface ILogEntry {
-    podId?: IIdRef;
-    processId?: IIdRef;
+/**
+ * This is the interface for the log entry object that is returned from the Moonbase server.
+ * @category API
+ */
+interface ILogEntryApi {
+    podId?: IIdRefApi;
+    processId?: IIdRefApi;
     level?: string;
     code?: string;
     stage?: string;
@@ -19,28 +28,35 @@ interface ILogEntry {
     printLevel?: string;
 }
 
+
+
+/**
+ * This is the interface for the log entry object that is returned from the Moonbase server.
+ * @category API
+ */
 export const Logs: React.FC = () => {
-    const [ logs, setLogs ] = React.useState<Array<ILogEntry>>();
+    const [ logs, setLogs ] = React.useState<Array<ILogEntryApi>>();
 
     const callGetLogs = async () => {
         const response = await axios.get(`${MoonbaseServerUrl}/logs?items=10`);
-        console.log(`response: ${JSON.stringify(response.data)}`);
-        console.log('response:', JSON.stringify(response.data[0]))
         const data = JSON.parse(JSON.stringify(response.data));
         let foundLogs: any[] = [];
         for (let i = 0; i < data.length; i++) {
-            console.log('data:', data[i][1])
             foundLogs.push(data[i][1]);
         }
-        console.log('foundLogs:', foundLogs)
+        if (foundLogs.length > 0) {
+            foundLogs = foundLogs.reverse();
+        }
+        if (foundLogs === logs) {
+            return;
+        }
         setLogs(foundLogs);
-        console.log('logs:', logs)
     }
 
     const printLogsEntries = () => {
         if (logs) {
 
-            return logs.map((log: ILogEntry, index: any) => {
+            return logs.map((log: ILogEntryApi, index: any) => {
                 return (
                     <div key={index}>
                         <p>{log.podId?.name} {log.processId?.name} {log.level} {log.code} {log.stage} {log.message} {JSON.stringify(log.error)}</p>
