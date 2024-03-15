@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import { MoonbaseServerUrl } from '../Dashboard';
-import { OpenDb } from './OpenDb';
+import { MoonbaseServerUrl } from '../Dashboard/index.js';
 
 interface IdReference {
     name: string;
@@ -137,7 +136,7 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                 
                 <select
                     value={postCommand ? postCommand : 'dial'}
-                    onChange={e => setPostCommand(e.target.value)}
+                    onChange={e => setPostCommand(e.target?.value)}
                     style={{ width: '128px' }}
                 >
                     <option value="dial">dial</option>
@@ -150,7 +149,7 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                         type="text"
                         value={args.address}
                         onChange={e => setArgs({
-                            address: e.target.value,
+                            address: (e.target as HTMLInputElement).value,
                             protocol: args.protocol
                         })}
                         style={{ width: '300px' }}
@@ -162,7 +161,7 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                         value={args.protocol}
                         onChange={e => setArgs({ 
                             address: args.address,
-                            protocol: e.target.value
+                            protocol: (e.target as HTMLInputElement).value
                         })}
                         style={{ width: '300px' }}
                     />
@@ -171,7 +170,7 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                     <input
                         type="text"
                         value={args.data?.name}
-                        onChange={e => setArgs({ data: { name: e.target.value } })}
+                        onChange={e => setArgs({ data: { name: (e.target as HTMLInputElement)?.value } })}
                         style={{ width: '300px' }}
                     />
                 : null}
@@ -179,7 +178,7 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                     <input
                         type="text"
                         value={args.data?.cid}
-                        onChange={e => setArgs({ data: { cid: e.target.value } })}
+                        onChange={e => setArgs({ data: { cid: (e.target as HTMLInputElement)?.value } })}
                         style={{ width: '300px' }}
                     />
                 : null}

@@ -1,0 +1,7 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": ["./src/index.tsx"],
+    "entryPointStrategy": "expand",
+    "name": "Airlock React",
+    "exclude": [ "test/**", "src/App.test.tsx" ]
+}

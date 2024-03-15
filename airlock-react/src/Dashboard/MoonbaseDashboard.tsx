@@ -97,7 +97,7 @@ export const MoonbaseDashboard: React.FC = () => {
           <input
             type="text"
             value={serverUrl}
-            onChange={e => setServerUrl(e.target.value)}
+            onChange={e => setServerUrl((e.target as HTMLInputElement).value)}
             placeholder={MoonbaseServerUrl}
             style={{ width: '300px' }}
           />
@@ -116,12 +116,12 @@ export const MoonbaseDashboard: React.FC = () => {
           <input
             type="text"
             value={podId}
-            onChange={e => setPodId(e.target.value)}
+            onChange={e => setPodId((e.target as HTMLInputElement).value)}
             placeholder="Enter pod ID"
           />
           <select
             value={component}
-            onChange={e => setComponent(e.target.value)}
+            onChange={e => setComponent(e.target?.value)}
           >
             <option value="orbitdb">OrbitDb</option>
             <option value="libp2p">Libp2p</option>
@@ -137,12 +137,12 @@ export const MoonbaseDashboard: React.FC = () => {
           <input
             type="text"
             value={dbName}
-            onChange={e => setDbName(e.target.value)}
+            onChange={e => setDbName((e.target as HTMLInputElement).value)}
             placeholder="Enter database name"
           />
           <select
             value={dbType}
-            onChange={e => setDbType(e.target.value)}
+            onChange={e => setDbType(e.target?.value)}
           >
             <option value="keyvalue">Key/Value</option>
             <option value="events">Event Log</option>

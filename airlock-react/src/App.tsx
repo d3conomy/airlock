@@ -24,3 +24,6 @@ const App: React.FC = () => {
 }
 
 export default App;
+
+export * from './Dashboard';
+export * from './Pod';
