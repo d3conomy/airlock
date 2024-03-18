@@ -58,8 +58,30 @@ export const Logs: React.FC = () => {
 
             return logs.map((log: ILogEntryApi, index: any) => {
                 return (
-                    <div key={index}>
-                        <p>{log.podId?.name} {log.processId?.name} {log.level} {log.code} {log.stage} {log.message} {JSON.stringify(log.error)}</p>
+                    // Create a box with a dropdown arrow that reveals the log entry details
+
+                    <div key={index} className="box">
+                        <article className="media">
+                            <div className="media-content">
+                                <div className="content">
+                                    <p>
+                                        <span style={{fontWeight: 'lighter', fontVariant: 'small-caps'}}>[{log.level}]</span><span style={{color: 'greenyellow'}}> {log.message}</span>
+                                        <br />
+                                        <small style={{fontStyle: 'italic', color: 'Highlight'}}>{log.timestamp}</small>
+                                        {log.error ? <br /> : null}
+                                        {log.error ? <span style={{color: 'red'}}>{log.error}</span> : null}
+                                        {log.podId ? <br /> : null}
+                                        {log.podId ? <span style={{color: 'darkturquoise'}}>Pod: {log.podId.name}</span> : null}
+                                        {log.processId ? <br /> : null}
+                                        {log.processId ? <span style={{color: 'darkturquoise'}}>Process: {log.processId.name}</span> : null}
+                                        {log.code ? <br /> : null}
+                                        {log.code ? <span style={{color: 'darkturquoise'}}>Code: {log.code}</span> : null}
+                                        {log.stage ? <br /> : null}
+                                        {log.stage ? <span style={{color: 'darkturquoise'}}>Stage: {log.stage}</span> : null}
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
                     </div>
                 );
             });
