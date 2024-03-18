@@ -20,7 +20,9 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
+    "axios": "^1.6.8",
+    "did-jwt": "^8.0.2",
     "follow-redirects": ">=1.15.6",
-    "axios": "^1.6.8"
+    "d3-common": "^0.0.1"
   }
 }
