@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import { MoonbaseServerUrl } from '../Dashboard/index.js';
+import { MoonbaseServerUrl } from '../Dashboard';
 
 interface IdReference {
     name: string;
@@ -38,9 +38,9 @@ interface LunarPodInfo {
 interface PostPodRequestArgs {
     address?: string;
     protocol?: string;
+    cid?: string;
     data?: {
         name?: string;
-        cid?: string;
     }
 }
 
@@ -177,8 +177,8 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                 {postCommand === 'getjson' ?
                     <input
                         type="text"
-                        value={args.data?.cid}
-                        onChange={e => setArgs({ data: { cid: (e.target as HTMLInputElement)?.value } })}
+                        value={args.cid}
+                        onChange={e => setArgs({ cid: (e.target as HTMLInputElement)?.value })}
                         style={{ width: '300px' }}
                     />
                 : null}
