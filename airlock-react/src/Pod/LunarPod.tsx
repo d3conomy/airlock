@@ -30,6 +30,7 @@ interface LunarPodProps {
 
 interface LunarPodInfo {
     peerId: string;
+    status: string;
     multiaddrs: string[];
     protocols: string[];
 
@@ -69,6 +70,7 @@ const callPostPod = async (podId: string, command: string, args: PostPodRequestA
 export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
     const [info, setInfo] = useState<LunarPodInfo>({
         peerId: '',
+        status: '',
         multiaddrs: [],
         protocols: []
     });
@@ -85,12 +87,14 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
 
     const handleGetPodInfo = async () => {
         const podId: string = lunarPod.pod?.name;
+        const status: any = await callGetPodInfo(podId, 'status');
         const peerId: string = await callGetPodInfo(podId, 'peerid');
         const multiaddrs: string[] = await callGetPodInfo(podId, 'multiaddrs');
         const protocols: string[] = await callGetPodInfo(podId, 'protocols');
 
         setInfo({
             peerId: peerId,
+            status: status?.libp2p,
             multiaddrs: multiaddrs,
             protocols: protocols
         });
@@ -127,10 +131,15 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
             margin: '10px',
             backgroundColor: 'lightgrey',
             textAlign: 'left',
-            overflow: 'clip',
+            overflow: 'scroll',
             maxWidth: '512px'
         }}>
-            <h2 style={{ textAlign: "center" }}>{lunarPod.pod.name}</h2>
+            <h2 style={{ textAlign: "center" }}>{lunarPod.pod.name} 
+            {info.status === 'started' ? <span style={{ color: 'green' }}> &#x25cf;</span> :
+                info.status === 'starting' ? <span style={{ color: 'yellow' }}> &#x25cf;</span> :
+                info.status === 'stopping' ? <span style={{ color: 'grey' }}> &#x25cf;</span> :
+                <span style={{ color: 'red' }}> &#x25cf;</span> }
+            </h2>
 
             <div>
                 
@@ -186,33 +195,34 @@ export const LunarPod: React.FC<LunarPodProps> = ({ lunarPod }) => {
                 <button onClick={handleDeletePod}>Delete Pod</button>
             </div>
 
-            <p>Peer Id: {info?.peerId}</p>
-            <p>Multiaddrs: {info.multiaddrs?.map((addr, index) =>{
-                return <span key={index}>{addr}<br/></span>
-            })}</p>
-            <p>Protocols: 
-                <br />
-                {info.protocols?.map((protocol, index) =>{
-                return <span key={index}>{protocol}<br/></span>
+            {/* Make the following horizontaly scrollable */}
 
-            })}</p>
-            <ul>
-                {lunarPod.components?.map((component, index) => {
-                    // if (component.id.component !== 'opendb') {
-                        return (
-                            <li key={index}>
-                                <h3>{component.id?.component} | {component.id?.name}</h3>
-                                <p>Status: {component.status?.stage}</p>
-                                <p>Message: {component.status?.message}</p>
-                                <p>Updated: {component.status?.updated}</p>
-                            </li>
-                        );
-                    // }
-                    // if (component.id.component === 'opendb') {
-                        
-                    // }
-                })}
-            </ul>
+            <div style={{ scrollbarColor: 'black', overflow: '', fontSize: '12px'   }}>
+                <p>Peer Id: {info?.peerId}</p>
+                <p>Multiaddrs: {info.multiaddrs?.map((addr, index) =>{
+                    return <span key={index}>{addr}<br/></span>
+                })}</p>
+                <p>Protocols: 
+                    <br />
+                    {info.protocols?.map((protocol, index) =>{
+                    return <span key={index}>{protocol}<br/></span>
+
+                })}</p>
+                <ul>
+                    {lunarPod.components?.map((component, index) => {
+                        // if (component.id.component !== 'opendb') {
+                            return (
+                                <li key={index}>
+                                    <h3>{component.id?.component} | {component.id?.name}</h3>
+                                </li>
+                            );
+                        // }
+                        // if (component.id.component === 'opendb') {
+                            
+                        // }
+                    })}
+                </ul>
+            </div>
         </div>
     );
 };
