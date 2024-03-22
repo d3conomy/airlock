@@ -15,14 +15,18 @@
   "author": "d3",
   "license": "ISC",
   "devDependencies": {
+    "@types/chance": "^1.1.6",
     "@types/node": "^20.11.5",
+    "@types/uuid": "^9.0.8",
+    "chance": "^1.1.11",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "uuid": "^9.0.1"
   },
   "dependencies": {
     "axios": "^1.6.8",
+    "d3-common": "^0.0.1",
     "did-jwt": "^8.0.2",
-    "follow-redirects": ">=1.15.6",
-    "d3-common": "^0.0.1"
+    "follow-redirects": ">=1.15.6"
   }
 }

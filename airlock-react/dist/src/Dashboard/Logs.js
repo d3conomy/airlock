@@ -70,8 +70,9 @@ export var Logs = function () {
     var printLogsEntries = function () {
         if (logs) {
             return logs.map(function (log, index) {
-                var _a, _b;
-                return (_jsx("div", { children: _jsxs("p", { children: [(_a = log.podId) === null || _a === void 0 ? void 0 : _a.name, " ", (_b = log.processId) === null || _b === void 0 ? void 0 : _b.name, " ", log.level, " ", log.code, " ", log.stage, " ", log.message, " ", JSON.stringify(log.error)] }) }, index));
+                return (
+                // Create a box with a dropdown arrow that reveals the log entry details
+                _jsx("div", { className: "box", children: _jsx("article", { className: "media", children: _jsx("div", { className: "media-content", children: _jsx("div", { className: "content", children: _jsxs("p", { children: [_jsxs("span", { style: { fontWeight: 'lighter', fontVariant: 'small-caps' }, children: ["[", log.level, "]"] }), _jsxs("span", { style: { color: 'greenyellow' }, children: [" ", log.message] }), _jsx("br", {}), _jsx("small", { style: { fontStyle: 'italic', color: 'Highlight' }, children: log.timestamp }), log.error ? _jsx("br", {}) : null, log.error ? _jsx("span", { style: { color: 'red' }, children: log.error }) : null, log.podId ? _jsx("br", {}) : null, log.podId ? _jsxs("span", { style: { color: 'darkturquoise' }, children: ["Pod: ", log.podId.name] }) : null, log.processId ? _jsx("br", {}) : null, log.processId ? _jsxs("span", { style: { color: 'darkturquoise' }, children: ["Process: ", log.processId.name] }) : null, log.code ? _jsx("br", {}) : null, log.code ? _jsxs("span", { style: { color: 'darkturquoise' }, children: ["Code: ", log.code] }) : null, log.stage ? _jsx("br", {}) : null, log.stage ? _jsxs("span", { style: { color: 'darkturquoise' }, children: ["Stage: ", log.stage] }) : null] }) }) }) }) }, index));
             });
         }
     };

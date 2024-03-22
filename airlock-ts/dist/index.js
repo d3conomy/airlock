@@ -1,20 +1,16 @@
-import axios from 'axios';
-const moonbaseUrl = 'http://0.0.0.0:4343/api/v0';
-const ping = async () => {
-    const response = await axios.get(`${moonbaseUrl}/ping`);
-    return response.data;
-};
-const openDb = async (dbName, dbType, options) => {
-    const response = await axios.post(`${moonbaseUrl}/db/open`, {
-        dbName,
-        dbType,
-        options
-    });
-    return response.data;
-};
-async function main() {
-    const pingResult = await ping();
-    console.log('pingResult:', pingResult);
+import { IdReferenceFactory, IdReferenceTypes } from "./id-reference-factory/index.js";
+import { MoonbaseServers } from "./moonbase-servers/index.js";
+import { AirlockConfig } from "./airlock-config/index.js";
+class Airlock {
+    idReferenceFactory;
+    moonbaseServers;
+    systemId;
+    airlockConfig;
+    constructor({ idReferenceFactory, moonbaseServersUrls, systemId, airlockConfig } = {}) {
+        this.idReferenceFactory = idReferenceFactory ? idReferenceFactory : new IdReferenceFactory();
+        this.systemId = systemId ? systemId : this.idReferenceFactory.createIdReference({ type: IdReferenceTypes.SYSTEM });
+        this.moonbaseServers = new MoonbaseServers({ idReferenceFactory: this.idReferenceFactory, moonbaseServerUrls: moonbaseServersUrls });
+        this.airlockConfig = airlockConfig ? airlockConfig : new AirlockConfig();
+    }
 }
-main();
-export { ping, openDb };
+export { Airlock };

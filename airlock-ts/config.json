@@ -1,0 +1,14 @@
+{
+    "MOONBASE_SERVERS": [
+        {
+            "MOONBASE_API_NAME": "Moonbase Alpha",
+            "MOONBASE_API_HOST": "0.0.0.0",
+            "MOONBASE_API_PORT": 4343,
+            "MOONBASE_API_PROTOCOL": "http://",
+            "MOONBASE_API_SECRET": "Need to implement Auth into Moonbase Server!",
+            "MOONBASE_API_PATH": "/api"
+        }
+    ],
+    "ID_REFERENCE_FORMAT": "NAME"
+
+}

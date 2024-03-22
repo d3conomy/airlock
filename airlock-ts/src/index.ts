@@ -1,7 +1,31 @@
+import { IdReferenceFactory, IdReferenceFormats, MoonbaseId, SystemId, IdReferenceTypes } from "./id-reference-factory/index.js";
+import { MoonbaseServers, MoonbaseServerUrl } from "./moonbase-servers/index.js";
+import { AirlockConfig } from "./airlock-config/index.js";
+
 class Airlock {
-  constructor() {
-    console.log('Airlock');
-  }
+    public idReferenceFactory: IdReferenceFactory;
+    public moonbaseServers: MoonbaseServers;
+    public systemId: SystemId;
+    public airlockConfig: AirlockConfig;
+
+    constructor({
+        idReferenceFactory,
+        moonbaseServersUrls,
+        systemId,
+        airlockConfig
+    }: {
+        idReferenceFactory?: IdReferenceFactory,
+        systemId?: SystemId,
+        moonbaseServersUrls?: Array<MoonbaseServerUrl>,
+        airlockConfig?: AirlockConfig
+    } = {}) {
+        this.idReferenceFactory = idReferenceFactory ? idReferenceFactory : new IdReferenceFactory();
+        this.systemId = systemId ? systemId : this.idReferenceFactory.createIdReference({type: IdReferenceTypes.SYSTEM}) as SystemId;
+        this.moonbaseServers = new MoonbaseServers({idReferenceFactory: this.idReferenceFactory, moonbaseServerUrls: moonbaseServersUrls});
+        this.airlockConfig = airlockConfig ? airlockConfig : new AirlockConfig();
+    }
 }
 
-export default Airlock;
+export {
+    Airlock
+}

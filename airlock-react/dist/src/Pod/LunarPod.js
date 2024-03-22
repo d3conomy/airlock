@@ -38,7 +38,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { MoonbaseServerUrl } from '../Dashboard/index.js';
+import { MoonbaseServerUrl } from '../Dashboard';
 var callDeletePods = function (podId) { return __awaiter(void 0, void 0, void 0, function () {
     var response;
     return __generator(this, function (_a) {
@@ -80,17 +80,18 @@ var callPostPod = function (podId, command, args) { return __awaiter(void 0, voi
     });
 }); };
 export var LunarPod = function (_a) {
-    var _b, _c, _d, _e, _f;
+    var _b, _c, _d, _e;
     var lunarPod = _a.lunarPod;
-    var _g = useState({
+    var _f = useState({
         peerId: '',
+        status: '',
         multiaddrs: [],
         protocols: []
-    }), info = _g[0], setInfo = _g[1];
-    var _h = useState('dial'), postCommand = _h[0], setPostCommand = _h[1];
-    var _j = useState({
+    }), info = _f[0], setInfo = _f[1];
+    var _g = useState('dial'), postCommand = _g[0], setPostCommand = _g[1];
+    var _h = useState({
         address: "/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"
-    }), args = _j[0], setArgs = _j[1];
+    }), args = _h[0], setArgs = _h[1];
     var handleDeletePod = function () { return __awaiter(void 0, void 0, void 0, function () {
         var deleteResponse;
         return __generator(this, function (_a) {
@@ -104,23 +105,27 @@ export var LunarPod = function (_a) {
         });
     }); };
     var handleGetPodInfo = function () { return __awaiter(void 0, void 0, void 0, function () {
-        var podId, peerId, multiaddrs, protocols;
+        var podId, status, peerId, multiaddrs, protocols;
         var _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     podId = (_a = lunarPod.pod) === null || _a === void 0 ? void 0 : _a.name;
-                    return [4 /*yield*/, callGetPodInfo(podId, 'peerid')];
+                    return [4 /*yield*/, callGetPodInfo(podId, 'status')];
                 case 1:
+                    status = _b.sent();
+                    return [4 /*yield*/, callGetPodInfo(podId, 'peerid')];
+                case 2:
                     peerId = _b.sent();
                     return [4 /*yield*/, callGetPodInfo(podId, 'multiaddrs')];
-                case 2:
+                case 3:
                     multiaddrs = _b.sent();
                     return [4 /*yield*/, callGetPodInfo(podId, 'protocols')];
-                case 3:
+                case 4:
                     protocols = _b.sent();
                     setInfo({
                         peerId: peerId,
+                        status: status === null || status === void 0 ? void 0 : status.libp2p,
                         multiaddrs: multiaddrs,
                         protocols: protocols
                     });
@@ -163,9 +168,12 @@ export var LunarPod = function (_a) {
             margin: '10px',
             backgroundColor: 'lightgrey',
             textAlign: 'left',
-            overflow: 'clip',
+            overflow: 'scroll',
             maxWidth: '512px'
-        }, children: [_jsx("h2", { style: { textAlign: "center" }, children: lunarPod.pod.name }), _jsxs("div", { children: [_jsxs("select", { value: postCommand ? postCommand : 'dial', onChange: function (e) { var _a; return setPostCommand((_a = e.target) === null || _a === void 0 ? void 0 : _a.value); }, style: { width: '128px' }, children: [_jsx("option", { value: "dial", children: "dial" }), _jsx("option", { value: "dialprotocol", children: "dial protocol" }), _jsx("option", { value: "addjson", children: "add json" }), _jsx("option", { value: "getjson", children: "get json" })] }), postCommand === 'dial' || postCommand === "dialprotocol" ?
+        }, children: [_jsxs("h2", { style: { textAlign: "center" }, children: [lunarPod.pod.name, info.status === 'started' ? _jsx("span", { style: { color: 'green' }, children: " \u25CF" }) :
+                        info.status === 'starting' ? _jsx("span", { style: { color: 'yellow' }, children: " \u25CF" }) :
+                            info.status === 'stopping' ? _jsx("span", { style: { color: 'grey' }, children: " \u25CF" }) :
+                                _jsx("span", { style: { color: 'red' }, children: " \u25CF" })] }), _jsxs("div", { children: [_jsxs("select", { value: postCommand ? postCommand : 'dial', onChange: function (e) { var _a; return setPostCommand((_a = e.target) === null || _a === void 0 ? void 0 : _a.value); }, style: { width: '128px' }, children: [_jsx("option", { value: "dial", children: "dial" }), _jsx("option", { value: "dialprotocol", children: "dial protocol" }), _jsx("option", { value: "addjson", children: "add json" }), _jsx("option", { value: "getjson", children: "get json" })] }), postCommand === 'dial' || postCommand === "dialprotocol" ?
                         _jsx("input", { type: "text", value: args.address, onChange: function (e) { return setArgs({
                                 address: e.target.value,
                                 protocol: args.protocol
@@ -178,17 +186,17 @@ export var LunarPod = function (_a) {
                         : null, postCommand === 'addjson' ?
                         _jsx("input", { type: "text", value: (_b = args.data) === null || _b === void 0 ? void 0 : _b.name, onChange: function (e) { var _a; return setArgs({ data: { name: (_a = e.target) === null || _a === void 0 ? void 0 : _a.value } }); }, style: { width: '300px' } })
                         : null, postCommand === 'getjson' ?
-                        _jsx("input", { type: "text", value: (_c = args.data) === null || _c === void 0 ? void 0 : _c.cid, onChange: function (e) { var _a; return setArgs({ data: { cid: (_a = e.target) === null || _a === void 0 ? void 0 : _a.value } }); }, style: { width: '300px' } })
-                        : null, _jsx("button", { onClick: handlePostPod, children: "Send Command" }), _jsx("button", { onClick: handleDeletePod, children: "Delete Pod" })] }), _jsxs("p", { children: ["Peer Id: ", info === null || info === void 0 ? void 0 : info.peerId] }), _jsxs("p", { children: ["Multiaddrs: ", (_d = info.multiaddrs) === null || _d === void 0 ? void 0 : _d.map(function (addr, index) {
-                        return _jsxs("span", { children: [addr, _jsx("br", {})] }, index);
-                    })] }), _jsxs("p", { children: ["Protocols:", _jsx("br", {}), (_e = info.protocols) === null || _e === void 0 ? void 0 : _e.map(function (protocol, index) {
-                        return _jsxs("span", { children: [protocol, _jsx("br", {})] }, index);
-                    })] }), _jsx("ul", { children: (_f = lunarPod.components) === null || _f === void 0 ? void 0 : _f.map(function (component, index) {
-                    var _a, _b, _c, _d, _e;
-                    // if (component.id.component !== 'opendb') {
-                    return (_jsxs("li", { children: [_jsxs("h3", { children: [(_a = component.id) === null || _a === void 0 ? void 0 : _a.component, " | ", (_b = component.id) === null || _b === void 0 ? void 0 : _b.name] }), _jsxs("p", { children: ["Status: ", (_c = component.status) === null || _c === void 0 ? void 0 : _c.stage] }), _jsxs("p", { children: ["Message: ", (_d = component.status) === null || _d === void 0 ? void 0 : _d.message] }), _jsxs("p", { children: ["Updated: ", (_e = component.status) === null || _e === void 0 ? void 0 : _e.updated] })] }, index));
-                    // }
-                    // if (component.id.component === 'opendb') {
-                    // }
-                }) })] }));
+                        _jsx("input", { type: "text", value: args.cid, onChange: function (e) { var _a; return setArgs({ cid: (_a = e.target) === null || _a === void 0 ? void 0 : _a.value }); }, style: { width: '300px' } })
+                        : null, _jsx("button", { onClick: handlePostPod, children: "Send Command" }), _jsx("button", { onClick: handleDeletePod, children: "Delete Pod" })] }), _jsxs("div", { style: { scrollbarColor: 'black', overflow: '', fontSize: '12px' }, children: [_jsxs("p", { children: ["Peer Id: ", info === null || info === void 0 ? void 0 : info.peerId] }), _jsxs("p", { children: ["Multiaddrs: ", (_c = info.multiaddrs) === null || _c === void 0 ? void 0 : _c.map(function (addr, index) {
+                                return _jsxs("span", { children: [addr, _jsx("br", {})] }, index);
+                            })] }), _jsxs("p", { children: ["Protocols:", _jsx("br", {}), (_d = info.protocols) === null || _d === void 0 ? void 0 : _d.map(function (protocol, index) {
+                                return _jsxs("span", { children: [protocol, _jsx("br", {})] }, index);
+                            })] }), _jsx("ul", { children: (_e = lunarPod.components) === null || _e === void 0 ? void 0 : _e.map(function (component, index) {
+                            var _a, _b;
+                            // if (component.id.component !== 'opendb') {
+                            return (_jsx("li", { children: _jsxs("h3", { children: [(_a = component.id) === null || _a === void 0 ? void 0 : _a.component, " | ", (_b = component.id) === null || _b === void 0 ? void 0 : _b.name] }) }, index));
+                            // }
+                            // if (component.id.component === 'opendb') {
+                            // }
+                        }) })] })] }));
 };
