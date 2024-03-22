@@ -1,5 +1,5 @@
 import { ApiClient } from "./ApiClient.js";
-import { PingRequest, PingResponseData } from "./MoonbaseApiClasses.js";
+import { DeployPodRequest, DeployPodResponse, PingRequest, PingResponse, PodsRequest, PodsResponse } from "./MoonbaseApiClasses.js";
 class ApiClientCalls extends ApiClient {
     moonbaseServerUrl;
     constructor(moonbaseServerUrl) {
@@ -9,7 +9,17 @@ class ApiClientCalls extends ApiClient {
     async ping() {
         const request = new PingRequest(this.moonbaseServerUrl);
         const response = await this.makeRequest(request);
-        return new PingResponseData({ response });
+        return new PingResponse(response);
+    }
+    async pods() {
+        const request = new PodsRequest(this.moonbaseServerUrl);
+        const response = await this.makeRequest(request);
+        return new PodsResponse(response);
+    }
+    async deployPod(podId, component) {
+        const request = new DeployPodRequest(this.moonbaseServerUrl, podId, component);
+        const response = await this.makeRequest(request);
+        return new DeployPodResponse(response);
     }
 }
 export { ApiClientCalls };

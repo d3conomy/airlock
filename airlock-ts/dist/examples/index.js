@@ -9,3 +9,6 @@ console.log(moonbaseServerUrl);
 const testServer = airlock.moonbaseServers.createServer({ url: moonbaseServerUrl });
 console.log(airlock.moonbaseServers.servers);
 console.log(await testServer.ping());
+console.log(await testServer.pods());
+console.log(await testServer.deployPod('test'));
+console.log(await testServer.pods());

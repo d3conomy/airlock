@@ -61,16 +61,61 @@ class PingRequest extends MoonbaseRequest {
     }
 }
 
-class PingResponseData extends MoonbaseResponse {
-    message: string;
+class PingResponse extends MoonbaseResponse {
+    message?: string;
 
-    constructor({
-        response
-    }: {
-        response: AxiosResponse
-    }) {
+    constructor(response: AxiosResponse) {
         super(response);
         this.message = response.data;
+    }
+}
+
+class PodsRequest extends MoonbaseRequest {
+    constructor(baseUrl: MoonbaseServerUrl) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: 'pods',
+            method: 'GET'
+        });
+    }
+}
+
+class PodsResponse extends MoonbaseResponse {
+    pods?: any[];
+
+    constructor(response: AxiosResponse) {
+        super(response);
+        this.pods = response.data;
+    }
+}
+
+class DeployPodRequest extends MoonbaseRequest {
+    constructor(baseUrl: MoonbaseServerUrl, podId?: string, component?: string) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pods`,
+            method: 'POST',
+            data: {
+                id: podId,
+                component: component
+            }
+        });
+    }
+}
+
+class DeployPodResponse extends MoonbaseResponse {
+    message?: string;
+    podId?: string;
+    component?: string;
+
+    constructor(response: AxiosResponse) {
+        super(response);
+
+        if (response.status === 200) {
+            this.message = response.data.message;
+            this.podId = response.data.podId;
+            this.component = response.data.component;
+        }
     }
 }
 
@@ -78,5 +123,9 @@ export {
     MoonbaseResponse,
     MoonbaseRequest,
     PingRequest,
-    PingResponseData
+    PingResponse,
+    PodsRequest,
+    PodsResponse,
+    DeployPodRequest,
+    DeployPodResponse
 }
