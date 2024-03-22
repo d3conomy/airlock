@@ -39,6 +39,13 @@ console.log((await testServer.apiClient.podCommand('test', PodCommands.Dial, new
 }))).data);
 console.log(await testServer.dial('test', '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'));
 console.log(await testServer.openDatabase('test-db', DatabaseTypes.EVENTS));
+const cid = await testServer.addRecordToDatabase('test-db', 'test', { test: 'test' });
+console.log(cid);
+console.log(await testServer.getRecordFromDatabase('test-db', cid));
+console.log(await testServer.putRecordToDatabase('test-db', cid, { test: 'test2' }));
+console.log(await testServer.getRecordFromDatabase('test-db', cid));
+console.log(await testServer.deleteRecordFromDatabase('test-db', cid));
+console.log(await testServer.closeDatabase('test-db'));
 console.log(await testServer.stopPod('test', 'ipfs'));
 console.log(await testServer.deletePod('test'));
-console.log(await testServer.logs());
+// console.log(await testServer.logs());

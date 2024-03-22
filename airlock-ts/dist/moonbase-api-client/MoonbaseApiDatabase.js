@@ -39,11 +39,22 @@ class OpenDatabaseResponse extends MoonbaseResponse {
     id;
     type;
     address;
+    multiaddrs;
     constructor(response) {
         super(response);
         this.id = response.data.id;
         this.type = response.data.type;
         this.address = response.data.address;
+        this.multiaddrs = response.data.multiaddrs;
+    }
+}
+class CloseDatabaseRequest extends MoonbaseRequest {
+    constructor(baseUrl, dbName) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `db/${dbName}`,
+            method: 'DELETE'
+        });
     }
 }
 class GetDatabaseInfoRequest extends MoonbaseRequest {
@@ -171,4 +182,80 @@ class GetRecordResponse extends MoonbaseResponse {
         this.record = new GetRecordResponseData(response.data);
     }
 }
-export { GetOpenDatabasesRequest, GetOpenDatabasesResponse, OpenDatabaseRequest, OpenDatabaseResponse, GetDatabaseInfoRequest, GetDatabaseInfoResponse, DatabaseRecord, DatabaseTypes, DatabaseCommands, AddRecordRequest, AddRecordResponse, AddRecordRequestData, GetRecordRequest, GetRecordRequestData, GetRecordResponse };
+class PutRecordRequestData {
+    command;
+    args;
+    constructor({ key, value }) {
+        this.command = DatabaseCommands.PUT;
+        this.args = new DatabaseRecord({
+            key: key,
+            value: value
+        });
+    }
+}
+class PutRecordRequest extends MoonbaseRequest {
+    constructor(baseUrl, dbId, data) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `db/${dbId}`,
+            method: 'POST',
+            data: data
+        });
+    }
+}
+class DatabaseCommandResponseData extends DatabaseRecord {
+    message;
+    dbId;
+    command;
+    error;
+    constructor({ key, value, cid, message, dbId, command, error }) {
+        super({
+            key: key,
+            value: value,
+            cid: cid
+        });
+        this.message = message;
+        this.dbId = dbId;
+        this.command = command;
+        this.error = error;
+    }
+}
+class PutRecordResponse extends MoonbaseResponse {
+    constructor(response) {
+        super(response);
+        if (response.status === 200 && response.data?.error) {
+            response.status = 400;
+        }
+        this.data = new DatabaseCommandResponseData({
+            key: response.data.key,
+            value: response.data.value,
+            cid: response.data.cid,
+            message: response.data.message,
+            dbId: response.data.dbId,
+            command: response.data.command,
+            error: response.data.error
+        });
+    }
+}
+class DeleteRecordRequestData {
+    command;
+    args;
+    constructor({ cid, key }) {
+        this.command = DatabaseCommands.DELETE;
+        this.args = new GetDatabaseRequestRecord({
+            cid: cid,
+            key: key
+        });
+    }
+}
+class DeleteRecordRequest extends MoonbaseRequest {
+    constructor(baseUrl, dbId, data) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `db/${dbId}`,
+            method: 'POST',
+            data: data
+        });
+    }
+}
+export { GetOpenDatabasesRequest, GetOpenDatabasesResponse, OpenDatabaseRequest, OpenDatabaseResponse, CloseDatabaseRequest, GetDatabaseInfoRequest, GetDatabaseInfoResponse, DatabaseRecord, DatabaseTypes, DatabaseCommands, AddRecordRequest, AddRecordResponse, AddRecordRequestData, GetRecordRequest, GetRecordRequestData, GetRecordResponse, PutRecordRequest, PutRecordRequestData, PutRecordResponse, DeleteRecordRequestData, DeleteRecordRequest };

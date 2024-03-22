@@ -86,5 +86,36 @@ class MoonbaseServer {
             address: response.address
         };
     }
+    async closeDatabase(dbName) {
+        return await this.apiClient.closeDatabase(dbName);
+    }
+    async addRecordToDatabase(dbName, key, value) {
+        const response = await this.apiClient.addRecord(dbName, key, value);
+        if (response.status !== 200) {
+            return response;
+        }
+        return response.cid;
+    }
+    async getRecordFromDatabase(dbName, key) {
+        const response = await this.apiClient.getRecord(dbName, key);
+        if (response.status !== 200) {
+            return response;
+        }
+        return response.data;
+    }
+    async putRecordToDatabase(dbName, key, value) {
+        const response = await this.apiClient.putRecord(dbName, key, value);
+        if (response.status !== 200) {
+            return response;
+        }
+        return response.data;
+    }
+    async deleteRecordFromDatabase(dbName, key) {
+        const response = await this.apiClient.deleteRecord(dbName, key);
+        if (response.status !== 200) {
+            return response;
+        }
+        return response;
+    }
 }
 export { MoonbaseServer };

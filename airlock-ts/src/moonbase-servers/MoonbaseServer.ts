@@ -3,6 +3,7 @@ import {
 } from '../id-reference-factory/index.js';
 import { ApiClientCalls } from '../moonbase-api-client/MoonbaseApiClientCalls.js';
 import {
+    AddRecordResponse,
     DatabaseTypes,
     DeletePodResponse,
     DeployPodResponse,
@@ -10,6 +11,7 @@ import {
     OpenDatabaseResponse,
     PodCommandResponse,
     PodInfoTypes,
+    PutRecordResponse,
     StartPodResponse
 } from '../moonbase-api-client/index.js';
 
@@ -138,6 +140,58 @@ class MoonbaseServer implements IMoonbaseServer {
             address: response.address
         };
     }
+
+    async closeDatabase(
+        dbName: string
+    ) {
+        return await this.apiClient.closeDatabase(dbName);
+    }
+
+    async addRecordToDatabase(
+        dbName: string,
+        key: string,
+        value: any
+    ) {
+        const response: AddRecordResponse = await this.apiClient.addRecord(dbName, key, value);
+        if (response.status !== 200) {
+            return response;
+        }
+        return response.cid;
+    }
+
+    async getRecordFromDatabase(
+        dbName: string,
+        key: string
+    ) {
+        const response: AddRecordResponse = await this.apiClient.getRecord(dbName, key);
+        if (response.status !== 200) {
+            return response;
+        }
+        return response.data;
+    }
+
+    async putRecordToDatabase(
+        dbName: string,
+        key: string,
+        value: any
+    ) {
+        const response: PutRecordResponse = await this.apiClient.putRecord(dbName, key, value);
+        if (response.status !== 200) {
+            return response;
+        }
+        return response.data;
+    }
+
+    async deleteRecordFromDatabase(
+        dbName: string,
+        key: string
+    ) {
+        const response: AddRecordResponse = await this.apiClient.deleteRecord(dbName, key);
+        if (response.status !== 200) {
+            return response;
+        }
+        return response;
+    }   
 
 }
 

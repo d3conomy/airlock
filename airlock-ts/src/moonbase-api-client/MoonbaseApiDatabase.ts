@@ -54,12 +54,27 @@ class OpenDatabaseResponse extends MoonbaseResponse {
     id?: string;
     type?: string;
     address?: string;
+    multiaddrs?: Array<string>;
 
     constructor(response: AxiosResponse<any>) {
         super(response);
         this.id = response.data.id;
         this.type = response.data.type;
         this.address = response.data.address;
+        this.multiaddrs = response.data.multiaddrs;
+    }
+}
+
+class CloseDatabaseRequest extends MoonbaseRequest {
+    constructor(
+        baseUrl: MoonbaseServerUrl,
+        dbName: string
+    ) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `db/${dbName}`,
+            method: 'DELETE'
+        });
     }
 }
 
@@ -253,11 +268,143 @@ class GetRecordResponse extends MoonbaseResponse {
     }
 }
 
+class PutRecordRequestData implements IDatabaseCommand {
+    command: DatabaseCommands;
+    args: DatabaseRecord;
+
+    constructor({
+        key,
+        value
+    } : {
+        key?: string,
+        value?: any
+    }) {
+        this.command = DatabaseCommands.PUT;
+        this.args = new DatabaseRecord({
+            key: key,
+            value: value
+        });
+    }
+}
+
+class PutRecordRequest extends MoonbaseRequest {
+    constructor(
+        baseUrl: MoonbaseServerUrl,
+        dbId: string,
+        data: PutRecordRequestData
+    ) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `db/${dbId}`,
+            method: 'POST',
+            data: data
+        });
+    }
+}
+
+class DatabaseCommandResponseData extends DatabaseRecord {
+    message?: string;
+    dbId?: {
+        name: string,
+        component: string
+    };
+    command?: DatabaseCommands;
+    error?: string;
+
+
+    constructor({
+        key,
+        value,
+        cid,
+        message,
+        dbId,
+        command,
+        error
+    } : {
+        key?: string,
+        value?: any,
+        cid?: string,
+        message?: string,
+        dbId?: {
+            name: string,
+            component: string
+        },
+        command?: DatabaseCommands,
+        error?: string
+    }) {
+        super({
+            key: key,
+            value: value,
+            cid: cid
+        });
+
+        this.message = message;
+        this.dbId = dbId;
+        this.command = command;
+        this.error = error;
+    }
+}
+
+class PutRecordResponse extends MoonbaseResponse {
+    constructor(response: AxiosResponse<any>) {
+        super(response);
+        
+        if(response.status === 200 && response.data?.error) {
+            response.status = 400;
+        }
+
+        this.data = new DatabaseCommandResponseData({
+            key: response.data.key,
+            value: response.data.value,
+            cid: response.data.cid,
+            message: response.data.message,
+            dbId: response.data.dbId,
+            command: response.data.command,
+            error: response.data.error
+        });
+    }
+}
+
+class DeleteRecordRequestData implements IDatabaseCommand {
+    command: DatabaseCommands;
+    args: GetDatabaseRequestRecord;
+
+    constructor({
+        cid,
+        key
+    } : {
+        cid?: string,
+        key?: string
+    }) {
+        this.command = DatabaseCommands.DELETE;
+        this.args = new GetDatabaseRequestRecord({
+            cid: cid,
+            key: key
+        });
+    }
+}
+
+class DeleteRecordRequest extends MoonbaseRequest {
+    constructor(
+        baseUrl: MoonbaseServerUrl,
+        dbId: string,
+        data: DeleteRecordRequestData
+    ) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `db/${dbId}`,
+            method: 'POST',
+            data: data
+        });
+    }
+}
+
 export {
     GetOpenDatabasesRequest,
     GetOpenDatabasesResponse,
     OpenDatabaseRequest,
     OpenDatabaseResponse,
+    CloseDatabaseRequest,
     GetDatabaseInfoRequest,
     GetDatabaseInfoResponse,
     DatabaseRecord,
@@ -268,5 +415,10 @@ export {
     AddRecordRequestData,
     GetRecordRequest,
     GetRecordRequestData,
-    GetRecordResponse
+    GetRecordResponse,
+    PutRecordRequest,
+    PutRecordRequestData,
+    PutRecordResponse,
+    DeleteRecordRequestData,
+    DeleteRecordRequest
 }
