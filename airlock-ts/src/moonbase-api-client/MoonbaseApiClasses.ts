@@ -119,6 +119,188 @@ class DeployPodResponse extends MoonbaseResponse {
     }
 }
 
+class DeletePodRequest extends MoonbaseRequest {
+    constructor(baseUrl: MoonbaseServerUrl, podId: string) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pods`,
+            method: 'DELETE',
+            data: {
+                id: podId
+            }
+        });
+    }
+}
+
+class DeletePodResponse extends MoonbaseResponse {
+    message?: string;
+    podId?: string;
+
+    constructor(response: AxiosResponse) {
+        super(response);
+
+        if (response.status === 200) {
+            this.message = response.data.message;
+            this.podId = response.data.nodeId;
+        }
+    }
+}
+
+class StartPodRequest extends MoonbaseRequest {
+    constructor(baseUrl: MoonbaseServerUrl, podId: string, component?: string) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pod/${podId}`,
+            method: 'PUT',
+            data: {
+                state: "start",
+                args: {
+                    component: component ? component : 'orbitdb' 
+                }
+            }
+        });
+    }
+}
+
+class StartPodResponse extends MoonbaseResponse {
+    message?: string;
+    podId?: string;
+    command?: string;
+    error?: string;
+
+    constructor(response: AxiosResponse) {
+        super(response);
+
+        if (response.status === 200) {
+            this.message = response.data.message;
+            this.podId = response.data.podId;
+            this.command = response.data.command;
+            this.error = response.data.error;
+        }
+
+        if (response.status === 404) {
+            this.message = response.data.message;
+            this.podId = response.data.podId;
+        }
+    }
+}
+
+class StopPodRequest extends MoonbaseRequest {
+    constructor(baseUrl: MoonbaseServerUrl, podId: string, component?: string) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pod/${podId}`,
+            method: 'PUT',
+            data: {
+                state: "stop",
+                args: {
+                    component: component ? component : 'orbitdb' 
+                }
+            }
+        });
+    }
+}
+
+interface IPodCommandArgs {
+    address?: string;
+    protocol?: string;
+    cid?: string;
+    jsonData?: any;
+}
+
+class PodCommandArgs implements IPodCommandArgs {
+    address?: string;
+    protocol?: string;
+    cid?: string;
+    jsonData?: any;
+
+    constructor(args: IPodCommandArgs) {
+        this.address = args.address;
+        this.protocol = args.protocol;
+        this.cid = args.cid;
+        this.jsonData = args.jsonData;
+    }
+}
+
+class DialCommandArgs implements IPodCommandArgs {
+    address?: string;
+    protocol?: string;
+
+    constructor(args: IPodCommandArgs) {
+        this.address = args.address;
+        this.protocol = args.protocol;
+    }
+}
+
+class AddJsonCommandArgs implements IPodCommandArgs {
+    cid?: string;
+    data?: {
+        data: any
+    }
+
+    constructor(jsonData: any) {
+        if (!this.data) {
+            this.data = {
+                data: {}
+            }
+        }
+        this.data.data = jsonData;
+    }
+}
+
+class GetJsonCommandArgs implements IPodCommandArgs {
+    cid?: string;
+
+    constructor(cid: string) {
+        this.cid = cid;
+    }
+}
+
+class PodCommandRequest extends MoonbaseRequest {
+    constructor(
+        baseUrl: MoonbaseServerUrl,
+        podId: string,
+        command: string,
+        args?: IPodCommandArgs
+    ) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pod/${podId}`,
+            method: 'POST',
+            data: {
+                command,
+                args
+            }
+        });
+    }
+} 
+
+interface IPodCommandResponseData {
+    message?: string;
+    podId?: string;
+    command?: string;
+    error?: string;
+    raw?: any;
+}
+
+class CommandResponseData implements IPodCommandResponseData {
+    raw?: any;
+
+    constructor(response: AxiosResponse) {
+        this.raw = response.data;
+    }
+}
+
+
+class PodCommandResponse extends MoonbaseResponse {
+    constructor(response: AxiosResponse) {
+        super(response);
+
+        this.data = new CommandResponseData(response);
+    }
+}
+
+
 export {
     MoonbaseResponse,
     MoonbaseRequest,
@@ -127,5 +309,16 @@ export {
     PodsRequest,
     PodsResponse,
     DeployPodRequest,
-    DeployPodResponse
+    DeployPodResponse,
+    DeletePodRequest,
+    DeletePodResponse,
+    StartPodRequest,
+    StartPodResponse,
+    StopPodRequest,
+    PodCommandRequest,
+    PodCommandResponse,
+    AddJsonCommandArgs,
+    GetJsonCommandArgs,
+    DialCommandArgs,
+    PodCommandArgs
 }

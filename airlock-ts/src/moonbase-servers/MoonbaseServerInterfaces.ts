@@ -18,6 +18,7 @@ interface IMoonbaseServers {
     servers: Array<IMoonbaseServer>;
 
     addServer(server: IMoonbaseServer): void;
+    createServer({id, url}: {id?: MoonbaseId, url: MoonbaseServerUrl}): IMoonbaseServer;
     removeServer(server: IMoonbaseServer): void;
     updateServer(server: IMoonbaseServer): void;
     getServer({id, name}: {id?: MoonbaseId, name?: MoonbaseId['name']}): IMoonbaseServer | undefined;

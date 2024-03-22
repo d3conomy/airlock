@@ -86,4 +86,139 @@ class DeployPodResponse extends MoonbaseResponse {
         }
     }
 }
-export { MoonbaseResponse, MoonbaseRequest, PingRequest, PingResponse, PodsRequest, PodsResponse, DeployPodRequest, DeployPodResponse };
+class DeletePodRequest extends MoonbaseRequest {
+    constructor(baseUrl, podId) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pods`,
+            method: 'DELETE',
+            data: {
+                id: podId
+            }
+        });
+    }
+}
+class DeletePodResponse extends MoonbaseResponse {
+    message;
+    podId;
+    constructor(response) {
+        super(response);
+        if (response.status === 200) {
+            this.message = response.data.message;
+            this.podId = response.data.nodeId;
+        }
+    }
+}
+class StartPodRequest extends MoonbaseRequest {
+    constructor(baseUrl, podId, component) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pod/${podId}`,
+            method: 'PUT',
+            data: {
+                state: "start",
+                args: {
+                    component: component ? component : 'orbitdb'
+                }
+            }
+        });
+    }
+}
+class StartPodResponse extends MoonbaseResponse {
+    message;
+    podId;
+    command;
+    error;
+    constructor(response) {
+        super(response);
+        if (response.status === 200) {
+            this.message = response.data.message;
+            this.podId = response.data.podId;
+            this.command = response.data.command;
+            this.error = response.data.error;
+        }
+        if (response.status === 404) {
+            this.message = response.data.message;
+            this.podId = response.data.podId;
+        }
+    }
+}
+class StopPodRequest extends MoonbaseRequest {
+    constructor(baseUrl, podId, component) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pod/${podId}`,
+            method: 'PUT',
+            data: {
+                state: "stop",
+                args: {
+                    component: component ? component : 'orbitdb'
+                }
+            }
+        });
+    }
+}
+class PodCommandArgs {
+    address;
+    protocol;
+    cid;
+    jsonData;
+    constructor(args) {
+        this.address = args.address;
+        this.protocol = args.protocol;
+        this.cid = args.cid;
+        this.jsonData = args.jsonData;
+    }
+}
+class DialCommandArgs {
+    address;
+    protocol;
+    constructor(args) {
+        this.address = args.address;
+        this.protocol = args.protocol;
+    }
+}
+class AddJsonCommandArgs {
+    cid;
+    data;
+    constructor(jsonData) {
+        if (!this.data) {
+            this.data = {
+                data: {}
+            };
+        }
+        this.data.data = jsonData;
+    }
+}
+class GetJsonCommandArgs {
+    cid;
+    constructor(cid) {
+        this.cid = cid;
+    }
+}
+class PodCommandRequest extends MoonbaseRequest {
+    constructor(baseUrl, podId, command, args) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pod/${podId}`,
+            method: 'POST',
+            data: {
+                command,
+                args
+            }
+        });
+    }
+}
+class CommandResponseData {
+    raw;
+    constructor(response) {
+        this.raw = response.data;
+    }
+}
+class PodCommandResponse extends MoonbaseResponse {
+    constructor(response) {
+        super(response);
+        this.data = new CommandResponseData(response);
+    }
+}
+export { MoonbaseResponse, MoonbaseRequest, PingRequest, PingResponse, PodsRequest, PodsResponse, DeployPodRequest, DeployPodResponse, DeletePodRequest, DeletePodResponse, StartPodRequest, StartPodResponse, StopPodRequest, PodCommandRequest, PodCommandResponse, AddJsonCommandArgs, GetJsonCommandArgs, DialCommandArgs, PodCommandArgs };
