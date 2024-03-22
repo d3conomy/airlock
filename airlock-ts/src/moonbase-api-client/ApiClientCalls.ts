@@ -1,6 +1,28 @@
 import { ApiClient } from "./ApiClient.js";
 import { MoonbaseServerUrl } from "../moonbase-servers/MoonbaseServerUrl.js";
-import { AddJsonCommandArgs, DeletePodRequest, DeletePodResponse, DeployPodRequest, DeployPodResponse, GetJsonCommandArgs, MoonbaseResponse, PingRequest, PingResponse, PodCommandArgs, PodCommandRequest, PodCommandResponse, PodsRequest, PodsResponse, StartPodRequest, StartPodResponse, StopPodRequest } from "./MoonbaseApiClasses.js";
+import {
+    AddJsonCommandArgs,
+    DeletePodRequest,
+    DeletePodResponse,
+    DeployPodRequest,
+    DeployPodResponse,
+    GetJsonCommandArgs,
+    GetPodInfoRequest,
+    GetPodInfoResponse,
+    MoonbaseResponse,
+    PingRequest,
+    PingResponse,
+    PodCommandArgs,
+    PodCommandRequest,
+    PodCommandResponse,
+    PodInfoTypes,
+    PodsRequest,
+    PodsResponse,
+    RestartPodRequest, 
+    StartPodRequest,
+    StartPodResponse,
+    StopPodRequest
+} from "./MoonbaseApiClasses.js";
 
 
 class ApiClientCalls extends ApiClient {
@@ -26,34 +48,63 @@ class ApiClientCalls extends ApiClient {
     }
 
     async deployPod(podId?: string, component?: string): Promise<DeployPodResponse> {
-        const request: any = new DeployPodRequest(this.moonbaseServerUrl, podId, component);
+        const request: any = new DeployPodRequest(
+            this.moonbaseServerUrl,
+            podId,
+            component
+        );
         const response = await this.makeRequest(request);
         return new DeployPodResponse(response)
     }
 
     async deletePod(podId: string): Promise<DeletePodResponse> {
-        const request: any = new DeletePodRequest(this.moonbaseServerUrl, podId);
+        const request: any = new DeletePodRequest(
+            this.moonbaseServerUrl,
+            podId
+        );
         const response = await this.makeRequest(request);
         return new DeletePodResponse(response)
     }
 
     async startPod(podId: string, component?: string): Promise<StartPodResponse> {
-        const request: any = new StartPodRequest(this.moonbaseServerUrl, podId, component);
+        const request: any = new StartPodRequest(
+            this.moonbaseServerUrl,
+            podId,
+            component
+        );
         const response = await this.makeRequest(request);
         return new StartPodResponse(response)
     }
 
     async stopPod(podId: string, component?: string): Promise<StartPodResponse> {
-        const request: any = new StopPodRequest(this.moonbaseServerUrl, podId, component);
+        const request: any = new StopPodRequest(
+            this.moonbaseServerUrl,
+            podId,
+            component
+        );
         const response = await this.makeRequest(request);
         return new StartPodResponse(response)
     }
 
-    // async restartPod(podId: string, component?: string): Promise<StartPodResponse> {
-    //     const request: any = new StopPodRequest(this.moonbaseServerUrl, podId, component);
-    //     const response = await this.makeRequest(request);
-    //     return new StartPodResponse(response)
-    // }
+    async restartPod(podId: string, component?: string): Promise<StartPodResponse> {
+        const request: any = new RestartPodRequest(
+            this.moonbaseServerUrl,
+            podId,
+            component
+        );
+        const response = await this.makeRequest(request);
+        return new StartPodResponse(response)
+    }
+
+    async podInfo(podId: string, info: PodInfoTypes): Promise<any> {
+        const request: any = new GetPodInfoRequest(
+            this.moonbaseServerUrl,
+            podId,
+            info
+        );
+        const response = await this.makeRequest(request);
+        return new GetPodInfoResponse(response);
+    }
 
     async podCommand(podId: string, command: string, args: PodCommandArgs): Promise<StartPodResponse> {
         const request: any = new PodCommandRequest(

@@ -1,5 +1,5 @@
 import { ApiClient } from "./ApiClient.js";
-import { AddJsonCommandArgs, DeletePodRequest, DeletePodResponse, DeployPodRequest, DeployPodResponse, GetJsonCommandArgs, PingRequest, PingResponse, PodCommandRequest, PodCommandResponse, PodsRequest, PodsResponse, StartPodRequest, StartPodResponse, StopPodRequest } from "./MoonbaseApiClasses.js";
+import { AddJsonCommandArgs, DeletePodRequest, DeletePodResponse, DeployPodRequest, DeployPodResponse, GetJsonCommandArgs, GetPodInfoRequest, GetPodInfoResponse, PingRequest, PingResponse, PodCommandRequest, PodCommandResponse, PodsRequest, PodsResponse, RestartPodRequest, StartPodRequest, StartPodResponse, StopPodRequest } from "./MoonbaseApiClasses.js";
 class ApiClientCalls extends ApiClient {
     moonbaseServerUrl;
     constructor(moonbaseServerUrl) {
@@ -36,11 +36,16 @@ class ApiClientCalls extends ApiClient {
         const response = await this.makeRequest(request);
         return new StartPodResponse(response);
     }
-    // async restartPod(podId: string, component?: string): Promise<StartPodResponse> {
-    //     const request: any = new StopPodRequest(this.moonbaseServerUrl, podId, component);
-    //     const response = await this.makeRequest(request);
-    //     return new StartPodResponse(response)
-    // }
+    async restartPod(podId, component) {
+        const request = new RestartPodRequest(this.moonbaseServerUrl, podId, component);
+        const response = await this.makeRequest(request);
+        return new StartPodResponse(response);
+    }
+    async podInfo(podId, info) {
+        const request = new GetPodInfoRequest(this.moonbaseServerUrl, podId, info);
+        const response = await this.makeRequest(request);
+        return new GetPodInfoResponse(response);
+    }
     async podCommand(podId, command, args) {
         const request = new PodCommandRequest(this.moonbaseServerUrl, podId, command);
         const response = await this.makeRequest(request);

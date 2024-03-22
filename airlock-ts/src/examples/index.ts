@@ -1,4 +1,5 @@
 import { Airlock } from '../index.js';
+import { PodInfoTypes } from '../moonbase-api-client/MoonbaseApiClasses.js';
 import { MoonbaseServer } from '../moonbase-servers/MoonbaseServer.js';
 import { MoonbaseServerUrl } from '../moonbase-servers/MoonbaseServerUrl.js';
 
@@ -35,6 +36,16 @@ console.log(await testServer.pods());
 console.log(await testServer.startPod('test', 'libp2p'));
 
 console.log(await testServer.pods());
+
+console.log(await testServer.getPodInfo('test', PodInfoTypes.Components));
+console.log(await testServer.getPodInfo('test', PodInfoTypes.PeerId));
+console.log(await testServer.getPodInfo('test', PodInfoTypes.MultiAddrs));
+console.log(await testServer.getPodInfo('test', PodInfoTypes.Peers));
+console.log(await testServer.getPodInfo('test', PodInfoTypes.Connections));
+console.log(await testServer.getPodInfo('test', PodInfoTypes.Protocols));
+
+
+console.log(await testServer.restartPod('test', 'libp2p'));
 
 console.log(await testServer.stopPod('test', 'libp2p'));
 

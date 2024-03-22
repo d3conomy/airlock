@@ -47,6 +47,19 @@ class MoonbaseServer {
             error: response?.error
         };
     }
+    async restartPod(podId, component) {
+        const response = await this.apiClient.restartPod(podId, component);
+        return {
+            message: response.message,
+            podId: response.podId,
+            command: response.command,
+            error: response?.error
+        };
+    }
+    async getPodInfo(podId, info) {
+        const response = await this.apiClient.podInfo(podId, info);
+        return response.podInfo;
+    }
     async addJsonToIpfs(podId, json) {
         const response = await this.apiClient.addJsonToIpfs(podId, json);
         return response.data.raw;

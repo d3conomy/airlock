@@ -2,7 +2,14 @@ import {
     MoonbaseId
 } from '../id-reference-factory/index.js';
 import { ApiClientCalls } from '../moonbase-api-client/ApiClientCalls.js';
-import { DeletePodResponse, DeployPodResponse, StartPodResponse } from '../moonbase-api-client/MoonbaseApiClasses.js';
+import {
+    DeletePodResponse,
+    DeployPodResponse,
+    GetPodInfoResponse,
+    PodCommandResponse,
+    PodInfoTypes,
+    StartPodResponse
+} from '../moonbase-api-client/MoonbaseApiClasses.js';
 
 import {
     IMoonbaseServer
@@ -69,6 +76,24 @@ class MoonbaseServer implements IMoonbaseServer {
             command: response.command,
             error: response?.error
         }
+    }
+
+    async restartPod(podId: string, component?: string) {
+        const response: StartPodResponse = await this.apiClient.restartPod(podId, component);
+        return {
+            message: response.message,
+            podId: response.podId,
+            command: response.command,
+            error: response?.error
+        }
+    }
+
+    async getPodInfo(podId: string, info: PodInfoTypes) {
+        const response: GetPodInfoResponse = await this.apiClient.podInfo(
+            podId,
+            info
+        );
+        return response.podInfo;
     }
 
     async addJsonToIpfs(podId: string, json: any) {

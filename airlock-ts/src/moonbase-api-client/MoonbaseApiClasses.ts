@@ -90,7 +90,11 @@ class PodsResponse extends MoonbaseResponse {
 }
 
 class DeployPodRequest extends MoonbaseRequest {
-    constructor(baseUrl: MoonbaseServerUrl, podId?: string, component?: string) {
+    constructor(
+        baseUrl: MoonbaseServerUrl,
+        podId?: string,
+        component?: string
+    ) {
         super({
             baseUrl: baseUrl,
             endpoint: `pods`,
@@ -147,7 +151,11 @@ class DeletePodResponse extends MoonbaseResponse {
 }
 
 class StartPodRequest extends MoonbaseRequest {
-    constructor(baseUrl: MoonbaseServerUrl, podId: string, component?: string) {
+    constructor(
+        baseUrl: MoonbaseServerUrl,
+        podId: string,
+        component?: string
+    ) {
         super({
             baseUrl: baseUrl,
             endpoint: `pod/${podId}`,
@@ -186,7 +194,11 @@ class StartPodResponse extends MoonbaseResponse {
 }
 
 class StopPodRequest extends MoonbaseRequest {
-    constructor(baseUrl: MoonbaseServerUrl, podId: string, component?: string) {
+    constructor(
+        baseUrl: MoonbaseServerUrl,
+        podId: string,
+        component?: string
+    ) {
         super({
             baseUrl: baseUrl,
             endpoint: `pod/${podId}`,
@@ -198,6 +210,70 @@ class StopPodRequest extends MoonbaseRequest {
                 }
             }
         });
+    }
+}
+
+class RestartPodRequest extends MoonbaseRequest {
+    constructor(
+        baseUrl: MoonbaseServerUrl,
+        podId: string,
+        component?: string
+    ) {
+        super({
+            baseUrl: baseUrl,
+            endpoint: `pod/${podId}`,
+            method: 'PUT',
+            data: {
+                state: "restart",
+                args: {
+                    component: component ? component : 'orbitdb' 
+                }
+            }
+        });
+    }
+}
+
+enum PodInfoTypes {
+    Components = 'components',
+    PeerId = 'peerId',
+    MultiAddrs = 'multiaddrs',
+    Connections = 'connections',
+    Peers = 'peers',
+    Protocols = 'protocols',
+}
+
+class GetPodInfoRequest extends MoonbaseRequest {
+    constructor(
+        baseUrl: MoonbaseServerUrl,
+        podId: string,
+        info?: PodInfoTypes
+    ) {
+        if (info && info !== PodInfoTypes.Components) {
+            super({
+                baseUrl: baseUrl,
+                endpoint: `pod/${podId}?info=${info.toLocaleLowerCase()}`,
+                method: 'GET'
+            });
+        } 
+        else if (!info || info === PodInfoTypes.Components){
+            super({
+                baseUrl: baseUrl,
+                endpoint: `pod/${podId}`,
+                method: 'GET'
+            });
+        }
+    }
+}
+
+class GetPodInfoResponse extends MoonbaseResponse {
+    podInfo?: any;
+
+    constructor(response: AxiosResponse) {
+        super(response);
+
+        if (response.status === 200) {
+            this.podInfo = response.data;
+        }
     }
 }
 
@@ -315,10 +391,14 @@ export {
     StartPodRequest,
     StartPodResponse,
     StopPodRequest,
+    RestartPodRequest,
     PodCommandRequest,
     PodCommandResponse,
     AddJsonCommandArgs,
     GetJsonCommandArgs,
     DialCommandArgs,
-    PodCommandArgs
+    PodCommandArgs,
+    PodInfoTypes,
+    GetPodInfoRequest,
+    GetPodInfoResponse
 }
