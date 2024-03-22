@@ -1,5 +1,5 @@
 import { Airlock } from '../index.js';
-import { PodCommandArgs, PodCommands, PodInfoTypes } from '../moonbase-api-client/MoonbaseApiClasses.js';
+import { DatabaseTypes, PodCommandArgs, PodCommands, PodInfoTypes } from '../moonbase-api-client/index.js';
 import { MoonbaseServer } from '../moonbase-servers/MoonbaseServer.js';
 import { MoonbaseServerUrl } from '../moonbase-servers/MoonbaseServerUrl.js';
 
@@ -62,15 +62,25 @@ console.log(await testServer.addJsonToIpfs('test', { test: 'test' }));
 
 console.log(await testServer.getJsonFromIpfs('test', 'baguqeeranrfuxsa3scibqessoex6btrdya7xpahjvdfr23qy4t6spzjnd6gq'));
 
-console.log(await testServer.apiClient.podCommand(
+console.log((await testServer.apiClient.podCommand(
     'test',
     PodCommands.Dial,
     new PodCommandArgs({
         address: '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'
     })
-));
+)).data);
 
 console.log(await testServer.dial(
     'test',
     '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'
 ));
+
+
+
+
+console.log(await testServer.openDatabase('test-db', DatabaseTypes.EVENTS));
+
+console.log(await testServer.stopPod('test', 'ipfs'));
+console.log(await testServer.deletePod('test'));
+
+console.log(await testServer.logs());

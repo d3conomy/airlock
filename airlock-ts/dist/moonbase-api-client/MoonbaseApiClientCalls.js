@@ -1,5 +1,9 @@
 import { ApiClient } from "./ApiClient.js";
-import { AddJsonCommandArgs, DeletePodRequest, DeletePodResponse, DeployPodRequest, DeployPodResponse, DialCommandArgs, GetJsonCommandArgs, GetPodInfoRequest, GetPodInfoResponse, PingRequest, PingResponse, PodCommandRequest, PodCommandResponse, PodCommands, PodsRequest, PodsResponse, RestartPodRequest, StartPodRequest, StartPodResponse, StopPodRequest } from "./MoonbaseApiClasses.js";
+import { PingRequest, PingResponse } from "./MoonbaseApiClasses.js";
+import { LogsRequest, LogBookResponse, } from "./MoonbaseApiLog.js";
+import { PodsRequest, PodsResponse, DeployPodRequest, DeployPodResponse, DeletePodRequest, DeletePodResponse, StartPodRequest, StartPodResponse, StopPodRequest, RestartPodRequest, } from "./MoonbaseApiPodControl.js";
+import { GetPodInfoRequest, GetPodInfoResponse, PodCommands, PodCommandRequest, PodCommandResponse, DialCommandArgs, AddJsonCommandArgs, GetJsonCommandArgs } from "./MoonbaseApiPodCommands.js";
+import { OpenDatabaseRequest, OpenDatabaseResponse, GetDatabaseInfoRequest, GetDatabaseInfoResponse, AddRecordRequest, AddRecordResponse, GetRecordRequestData, AddRecordRequestData, DatabaseRecord, } from "./MoonbaseApiDatabase.js";
 class ApiClientCalls extends ApiClient {
     moonbaseServerUrl;
     constructor(moonbaseServerUrl) {
@@ -10,6 +14,11 @@ class ApiClientCalls extends ApiClient {
         const request = new PingRequest(this.moonbaseServerUrl);
         const response = await this.makeRequest(request);
         return new PingResponse(response);
+    }
+    async logs() {
+        const request = new LogsRequest(this.moonbaseServerUrl);
+        const response = await this.makeRequest(request);
+        return new LogBookResponse(response);
     }
     async pods() {
         const request = new PodsRequest(this.moonbaseServerUrl);
@@ -65,6 +74,32 @@ class ApiClientCalls extends ApiClient {
         const request = new PodCommandRequest(this.moonbaseServerUrl, podId, PodCommands.GetJson, new GetJsonCommandArgs(cid));
         const response = await this.makeRequest(request);
         return new PodCommandResponse(response);
+    }
+    async openDatabase(dbName, dbType) {
+        const request = new OpenDatabaseRequest(this.moonbaseServerUrl, dbName, dbType);
+        const response = await this.makeRequest(request);
+        return new OpenDatabaseResponse(response);
+    }
+    async getDatabaseInfo(dbName) {
+        const request = new GetDatabaseInfoRequest(this.moonbaseServerUrl, dbName);
+        const response = await this.makeRequest(request);
+        return new GetDatabaseInfoResponse(response);
+    }
+    async addRecord(dbId, key, value) {
+        const request = new AddRecordRequest(this.moonbaseServerUrl, dbId, new AddRecordRequestData(new DatabaseRecord({
+            key: key,
+            value: value
+        })));
+        const response = await this.makeRequest(request);
+        return new AddRecordResponse(response);
+    }
+    async getRecord(dbId, key, cid) {
+        const request = new AddRecordRequest(this.moonbaseServerUrl, dbId, new GetRecordRequestData({
+            key: key,
+            cid: cid
+        }));
+        const response = await this.makeRequest(request);
+        return new AddRecordResponse(response);
     }
 }
 export { ApiClientCalls };

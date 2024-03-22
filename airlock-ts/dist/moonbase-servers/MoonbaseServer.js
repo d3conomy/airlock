@@ -1,4 +1,5 @@
-import { ApiClientCalls } from '../moonbase-api-client/ApiClientCalls.js';
+import { ApiClientCalls } from '../moonbase-api-client/MoonbaseApiClientCalls.js';
+import { DatabaseTypes } from '../moonbase-api-client/index.js';
 class MoonbaseServer {
     id;
     url;
@@ -10,6 +11,9 @@ class MoonbaseServer {
     }
     async ping() {
         return (await this.apiClient.ping()).message;
+    }
+    async logs() {
+        return (await this.apiClient.logs()).logs;
     }
     async pods() {
         return (await this.apiClient.pods()).pods;
@@ -71,6 +75,16 @@ class MoonbaseServer {
     async dial(podId, multiaddr) {
         const response = await this.apiClient.podDial(podId, multiaddr);
         return response.data.raw;
+    }
+    async openDatabase(
+    // podId: string, TODO: add podId to openDatabase to allow for opening databases in specific pods
+    dbName, dbType = DatabaseTypes.DOCUMENT) {
+        const response = await this.apiClient.openDatabase(dbName, dbType);
+        return {
+            id: response.id,
+            type: response.type,
+            address: response.address
+        };
     }
 }
 export { MoonbaseServer };

@@ -1,19 +1,21 @@
 import {
     MoonbaseId
 } from '../id-reference-factory/index.js';
-import { ApiClientCalls } from '../moonbase-api-client/ApiClientCalls.js';
+import { ApiClientCalls } from '../moonbase-api-client/MoonbaseApiClientCalls.js';
 import {
+    DatabaseTypes,
     DeletePodResponse,
     DeployPodResponse,
     GetPodInfoResponse,
+    OpenDatabaseResponse,
     PodCommandResponse,
     PodInfoTypes,
     StartPodResponse
-} from '../moonbase-api-client/MoonbaseApiClasses.js';
+} from '../moonbase-api-client/index.js';
 
 import {
     IMoonbaseServer
-} from './MoonbaseServerInterfaces';
+} from './MoonbaseServerInterfaces.js';
 import { MoonbaseServerUrl } from './MoonbaseServerUrl.js';
 
 class MoonbaseServer implements IMoonbaseServer {
@@ -35,6 +37,10 @@ class MoonbaseServer implements IMoonbaseServer {
 
     async ping() {
         return (await this.apiClient.ping()).message;
+    }
+
+    async logs() {
+        return (await this.apiClient.logs()).logs;
     }
 
     async pods() {
@@ -96,19 +102,41 @@ class MoonbaseServer implements IMoonbaseServer {
         return response.podInfo;
     }
 
-    async addJsonToIpfs(podId: string, json: any) {
-        const response = await this.apiClient.addJsonToIpfs(podId, json);
+    async addJsonToIpfs(
+        podId: string,
+        json: any
+    ) {
+        const response: PodCommandResponse = await this.apiClient.addJsonToIpfs(podId, json);
         return response.data.raw;
     }
 
-    async getJsonFromIpfs(podId: string, hash: string) {
-        const response = await this.apiClient.getJsonFromIpfs(podId, hash);
+    async getJsonFromIpfs(
+        podId: string,
+        hash: string
+    ) {
+        const response: PodCommandResponse = await this.apiClient.getJsonFromIpfs(podId, hash);
         return response.data.raw;
     }
 
-    async dial(podId: string, multiaddr: string) {
-        const response = await this.apiClient.podDial(podId, multiaddr);
+    async dial(
+        podId: string,
+        multiaddr: string
+    ) {
+        const response: PodCommandResponse = await this.apiClient.podDial(podId, multiaddr);
         return response.data.raw;
+    }
+
+    async openDatabase(
+        // podId: string, TODO: add podId to openDatabase to allow for opening databases in specific pods
+        dbName: string,
+        dbType: DatabaseTypes = DatabaseTypes.DOCUMENT
+    ) {
+        const response: OpenDatabaseResponse = await this.apiClient.openDatabase(dbName, dbType);
+        return {
+            id: response.id,
+            type: response.type,
+            address: response.address
+        };
     }
 
 }

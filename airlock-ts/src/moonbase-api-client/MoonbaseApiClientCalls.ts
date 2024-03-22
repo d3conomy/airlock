@@ -1,30 +1,57 @@
 import { ApiClient } from "./ApiClient.js";
 import { MoonbaseServerUrl } from "../moonbase-servers/MoonbaseServerUrl.js";
 import {
-    AddJsonCommandArgs,
-    DeletePodRequest,
-    DeletePodResponse,
+    PingRequest,
+    PingResponse
+} from "./MoonbaseApiClasses.js";
+
+import {
+    LogsRequest,
+    LogBookResponse,
+} from "./MoonbaseApiLog.js";
+
+import {
+    PodsRequest,
+    PodsResponse,
     DeployPodRequest,
     DeployPodResponse,
-    DialCommandArgs,
-    GetJsonCommandArgs,
+    DeletePodRequest,
+    DeletePodResponse,
+    StartPodRequest,
+    StartPodResponse,
+    StopPodRequest,
+    RestartPodRequest,
+} from "./MoonbaseApiPodControl.js";
+
+import {
     GetPodInfoRequest,
     GetPodInfoResponse,
-    MoonbaseResponse,
-    PingRequest,
-    PingResponse,
+    PodInfoTypes,
+    PodCommands,
     PodCommandArgs,
     PodCommandRequest,
     PodCommandResponse,
-    PodCommands,
-    PodInfoTypes,
-    PodsRequest,
-    PodsResponse,
-    RestartPodRequest, 
-    StartPodRequest,
-    StartPodResponse,
-    StopPodRequest
-} from "./MoonbaseApiClasses.js";
+    DialCommandArgs,
+    AddJsonCommandArgs,
+    GetJsonCommandArgs
+} from "./MoonbaseApiPodCommands.js";
+
+import {
+    GetOpenDatabasesRequest,
+    GetOpenDatabasesResponse,
+    OpenDatabaseRequest,
+    OpenDatabaseResponse,
+    GetDatabaseInfoRequest,
+    GetDatabaseInfoResponse,
+    DatabaseCommands,
+    DatabaseTypes,
+    AddRecordRequest,
+    AddRecordResponse,
+    GetRecordRequestData,
+    AddRecordRequestData,
+    DatabaseRecord,
+    GetRecordResponse,
+} from "./MoonbaseApiDatabase.js";
 
 
 class ApiClientCalls extends ApiClient {
@@ -41,6 +68,12 @@ class ApiClientCalls extends ApiClient {
         const request: any = new PingRequest(this.moonbaseServerUrl);
         const response = await this.makeRequest(request);
         return new PingResponse(response);
+    }
+
+    async logs(): Promise<LogBookResponse> {
+        const request: any = new LogsRequest(this.moonbaseServerUrl);
+        const response = await this.makeRequest(request);
+        return new LogBookResponse(response);
     }
 
     async pods(): Promise<PodsResponse> {
@@ -112,7 +145,7 @@ class ApiClientCalls extends ApiClient {
     async podInfo(
         podId: string,
         info: PodInfoTypes
-    ): Promise<any> {
+    ): Promise<GetPodInfoResponse> {
         const request: any = new GetPodInfoRequest(
             this.moonbaseServerUrl,
             podId,
@@ -179,6 +212,65 @@ class ApiClientCalls extends ApiClient {
         return new PodCommandResponse(response);
     }
 
+    async openDatabase(
+        dbName: string,
+        dbType: DatabaseTypes
+    ): Promise<OpenDatabaseResponse> {
+        const request: any = new OpenDatabaseRequest(
+            this.moonbaseServerUrl,
+            dbName,
+            dbType
+        );
+        const response = await this.makeRequest(request);
+        return new OpenDatabaseResponse(response);
+    }
+
+    async getDatabaseInfo(
+        dbName: string
+    ): Promise<GetDatabaseInfoResponse> {
+        const request: any = new GetDatabaseInfoRequest(
+            this.moonbaseServerUrl,
+            dbName
+        );
+        const response = await this.makeRequest(request);
+        return new GetDatabaseInfoResponse(response);
+    }
+
+    async addRecord(
+        dbId: string,
+        key?: string,
+        value?: any
+    ): Promise<AddRecordResponse> {
+        const request: any = new AddRecordRequest(
+            this.moonbaseServerUrl,
+            dbId,
+            new AddRecordRequestData(
+                new DatabaseRecord({
+                    key: key,
+                    value: value
+                })
+            )
+        );
+        const response = await this.makeRequest(request);
+        return new AddRecordResponse(response);
+    }
+
+    async getRecord(
+        dbId: string,
+        key?: string,
+        cid?: string
+    ): Promise<GetRecordResponse> {
+        const request: any = new AddRecordRequest(
+            this.moonbaseServerUrl,
+            dbId,
+            new GetRecordRequestData({
+                key: key,
+                cid: cid
+        })
+        );
+        const response = await this.makeRequest(request);
+        return new AddRecordResponse(response);
+    }
 }
 
 export {
