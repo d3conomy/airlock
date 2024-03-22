@@ -214,19 +214,19 @@ class PodCommandArgs {
     protocol;
     cid;
     jsonData;
-    constructor(args) {
-        this.address = args.address;
-        this.protocol = args.protocol;
-        this.cid = args.cid;
-        this.jsonData = args.jsonData;
+    constructor({ address, protocol, cid, jsonData } = {}) {
+        this.address = address;
+        this.protocol = protocol;
+        this.cid = cid;
+        this.jsonData = jsonData;
     }
 }
 class DialCommandArgs {
     address;
     protocol;
-    constructor(args) {
-        this.address = args.address;
-        this.protocol = args.protocol;
+    constructor({ address, protocol }) {
+        this.address = address;
+        this.protocol = protocol;
     }
 }
 class AddJsonCommandArgs {
@@ -247,6 +247,15 @@ class GetJsonCommandArgs {
         this.cid = cid;
     }
 }
+var PodCommands;
+(function (PodCommands) {
+    PodCommands["AddJson"] = "addjson";
+    PodCommands["GetJson"] = "getjson";
+    PodCommands["Dial"] = "dial";
+    PodCommands["Publish"] = "publish";
+    PodCommands["Subscribe"] = "subscribe";
+    PodCommands["Unsubscribe"] = "unsubscribe";
+})(PodCommands || (PodCommands = {}));
 class PodCommandRequest extends MoonbaseRequest {
     constructor(baseUrl, podId, command, args) {
         super({
@@ -260,16 +269,21 @@ class PodCommandRequest extends MoonbaseRequest {
         });
     }
 }
-class CommandResponseData {
+class PodCommandResponseData {
     raw;
+    command;
+    args;
     constructor(response) {
         this.raw = response.data;
+        this.command = response.data.command;
+        this.args = response.data.args;
     }
 }
 class PodCommandResponse extends MoonbaseResponse {
+    data;
     constructor(response) {
         super(response);
-        this.data = new CommandResponseData(response);
+        this.data = new PodCommandResponseData(response);
     }
 }
-export { MoonbaseResponse, MoonbaseRequest, PingRequest, PingResponse, PodsRequest, PodsResponse, DeployPodRequest, DeployPodResponse, DeletePodRequest, DeletePodResponse, StartPodRequest, StartPodResponse, StopPodRequest, RestartPodRequest, PodCommandRequest, PodCommandResponse, AddJsonCommandArgs, GetJsonCommandArgs, DialCommandArgs, PodCommandArgs, PodInfoTypes, GetPodInfoRequest, GetPodInfoResponse };
+export { MoonbaseResponse, MoonbaseRequest, PingRequest, PingResponse, PodsRequest, PodsResponse, DeployPodRequest, DeployPodResponse, DeletePodRequest, DeletePodResponse, StartPodRequest, StartPodResponse, StopPodRequest, RestartPodRequest, PodCommands, PodCommandRequest, PodCommandResponse, AddJsonCommandArgs, GetJsonCommandArgs, DialCommandArgs, PodCommandArgs, PodInfoTypes, GetPodInfoRequest, GetPodInfoResponse };

@@ -68,5 +68,9 @@ class MoonbaseServer {
         const response = await this.apiClient.getJsonFromIpfs(podId, hash);
         return response.data.raw;
     }
+    async dial(podId, multiaddr) {
+        const response = await this.apiClient.podDial(podId, multiaddr);
+        return response.data.raw;
+    }
 }
 export { MoonbaseServer };

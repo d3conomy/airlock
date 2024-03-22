@@ -6,6 +6,7 @@ import {
     DeletePodResponse,
     DeployPodRequest,
     DeployPodResponse,
+    DialCommandArgs,
     GetJsonCommandArgs,
     GetPodInfoRequest,
     GetPodInfoResponse,
@@ -15,6 +16,7 @@ import {
     PodCommandArgs,
     PodCommandRequest,
     PodCommandResponse,
+    PodCommands,
     PodInfoTypes,
     PodsRequest,
     PodsResponse,
@@ -47,7 +49,9 @@ class ApiClientCalls extends ApiClient {
         return new PodsResponse(response);
     }
 
-    async deployPod(podId?: string, component?: string): Promise<DeployPodResponse> {
+    async deployPod(podId?: string,
+        component?: string
+    ): Promise<DeployPodResponse> {
         const request: any = new DeployPodRequest(
             this.moonbaseServerUrl,
             podId,
@@ -66,7 +70,10 @@ class ApiClientCalls extends ApiClient {
         return new DeletePodResponse(response)
     }
 
-    async startPod(podId: string, component?: string): Promise<StartPodResponse> {
+    async startPod(
+        podId: string,
+        component?: string
+    ): Promise<StartPodResponse> {
         const request: any = new StartPodRequest(
             this.moonbaseServerUrl,
             podId,
@@ -76,7 +83,10 @@ class ApiClientCalls extends ApiClient {
         return new StartPodResponse(response)
     }
 
-    async stopPod(podId: string, component?: string): Promise<StartPodResponse> {
+    async stopPod(
+        podId: string,
+        component?: string
+    ): Promise<StartPodResponse> {
         const request: any = new StopPodRequest(
             this.moonbaseServerUrl,
             podId,
@@ -86,7 +96,10 @@ class ApiClientCalls extends ApiClient {
         return new StartPodResponse(response)
     }
 
-    async restartPod(podId: string, component?: string): Promise<StartPodResponse> {
+    async restartPod(
+        podId: string,
+        component?: string
+    ): Promise<StartPodResponse> {
         const request: any = new RestartPodRequest(
             this.moonbaseServerUrl,
             podId,
@@ -96,7 +109,10 @@ class ApiClientCalls extends ApiClient {
         return new StartPodResponse(response)
     }
 
-    async podInfo(podId: string, info: PodInfoTypes): Promise<any> {
+    async podInfo(
+        podId: string,
+        info: PodInfoTypes
+    ): Promise<any> {
         const request: any = new GetPodInfoRequest(
             this.moonbaseServerUrl,
             podId,
@@ -106,32 +122,57 @@ class ApiClientCalls extends ApiClient {
         return new GetPodInfoResponse(response);
     }
 
-    async podCommand(podId: string, command: string, args: PodCommandArgs): Promise<StartPodResponse> {
+    async podCommand(
+        podId: string,
+        command: PodCommands,
+        args: PodCommandArgs
+    ): Promise<PodCommandResponse> {
         const request: any = new PodCommandRequest(
             this.moonbaseServerUrl,
             podId,
-            command
+            command,
+            args
         );
         const response = await this.makeRequest(request);
-        return new StartPodResponse(response)
+        return new PodCommandResponse(response)
     }
 
-    async addJsonToIpfs(podId: string, jsonData: any): Promise<any> {
+    async podDial(
+        podId: string,
+        multiAddr: string
+    ): Promise<PodCommandResponse> {
         const request: any = new PodCommandRequest(
             this.moonbaseServerUrl,
             podId,
-            'addjson',
+            PodCommands.Dial,
+            new DialCommandArgs({address: multiAddr})
+        );
+        const response = await this.makeRequest(request);
+        return new PodCommandResponse(response)
+    }
+
+    async addJsonToIpfs(
+        podId: string,
+        jsonData: any
+    ): Promise<PodCommandResponse> {
+        const request: any = new PodCommandRequest(
+            this.moonbaseServerUrl,
+            podId,
+            PodCommands.AddJson,
             new AddJsonCommandArgs(jsonData)
         );
         const response = await this.makeRequest(request);
         return new PodCommandResponse(response);
     }
 
-    async getJsonFromIpfs(podId: string, cid: string): Promise<any> {
+    async getJsonFromIpfs(
+        podId: string, 
+        cid: string
+    ): Promise<PodCommandResponse> {
         const request: any = new PodCommandRequest(
             this.moonbaseServerUrl,
             podId,
-            'getjson',
+            PodCommands.GetJson,
             new GetJsonCommandArgs(cid)
         );
         const response = await this.makeRequest(request);

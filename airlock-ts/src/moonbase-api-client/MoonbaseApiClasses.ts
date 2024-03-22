@@ -290,11 +290,21 @@ class PodCommandArgs implements IPodCommandArgs {
     cid?: string;
     jsonData?: any;
 
-    constructor(args: IPodCommandArgs) {
-        this.address = args.address;
-        this.protocol = args.protocol;
-        this.cid = args.cid;
-        this.jsonData = args.jsonData;
+    constructor({
+        address,
+        protocol,
+        cid,
+        jsonData
+    }: {
+        address?: string,
+        protocol?: string,
+        cid?: string,
+        jsonData?: any
+    } = {}) {
+        this.address = address;
+        this.protocol = protocol;
+        this.cid = cid;
+        this.jsonData = jsonData;
     }
 }
 
@@ -302,9 +312,15 @@ class DialCommandArgs implements IPodCommandArgs {
     address?: string;
     protocol?: string;
 
-    constructor(args: IPodCommandArgs) {
-        this.address = args.address;
-        this.protocol = args.protocol;
+    constructor({
+        address,
+        protocol
+    }: {
+        address: string,
+        protocol?: string
+    }) {
+        this.address = address;
+        this.protocol = protocol;
     }
 }
 
@@ -332,11 +348,20 @@ class GetJsonCommandArgs implements IPodCommandArgs {
     }
 }
 
+enum PodCommands {
+    AddJson = 'addjson',
+    GetJson = 'getjson',
+    Dial = 'dial',
+    Publish = 'publish',
+    Subscribe = 'subscribe',
+    Unsubscribe = 'unsubscribe'
+}
+
 class PodCommandRequest extends MoonbaseRequest {
     constructor(
         baseUrl: MoonbaseServerUrl,
         podId: string,
-        command: string,
+        command: PodCommands,
         args?: IPodCommandArgs
     ) {
         super({
@@ -359,20 +384,26 @@ interface IPodCommandResponseData {
     raw?: any;
 }
 
-class CommandResponseData implements IPodCommandResponseData {
+class PodCommandResponseData implements IPodCommandResponseData {
     raw?: any;
+    command?: string;
+    args?: any
 
     constructor(response: AxiosResponse) {
         this.raw = response.data;
+        this.command = response.data.command;
+        this.args = response.data.args;
     }
 }
 
 
 class PodCommandResponse extends MoonbaseResponse {
+    data: PodCommandResponseData;
+
     constructor(response: AxiosResponse) {
         super(response);
 
-        this.data = new CommandResponseData(response);
+        this.data = new PodCommandResponseData(response);
     }
 }
 
@@ -392,6 +423,7 @@ export {
     StartPodResponse,
     StopPodRequest,
     RestartPodRequest,
+    PodCommands,
     PodCommandRequest,
     PodCommandResponse,
     AddJsonCommandArgs,

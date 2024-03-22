@@ -106,6 +106,11 @@ class MoonbaseServer implements IMoonbaseServer {
         return response.data.raw;
     }
 
+    async dial(podId: string, multiaddr: string) {
+        const response = await this.apiClient.podDial(podId, multiaddr);
+        return response.data.raw;
+    }
+
 }
 
 export {

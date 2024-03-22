@@ -5,9 +5,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/d3conomy/airlock.git"
+  },
   "scripts": {
     "test": "tsc && mocha dist/tests/*.spec.js",
-    "examples": "tsc && node dist/examples/*.js",
+    "examples": "tsc && node dist/examples/index.js",
     "build": "tsc",
     "start": "node dist/index.js",
     "start:es": "node --es-module-specifier-resolution=node dist/index.js",
@@ -16,21 +20,19 @@
   "author": "d3",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^4.3.14",
     "@types/chance": "^1.1.6",
     "@types/node": "^20.11.5",
     "@types/uuid": "^9.0.8",
+    "chai": "^5.1.0",
     "chance": "^1.1.11",
+    "mocha": "^10.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2",
     "uuid": "^9.0.1"
   },
   "dependencies": {
-    "@types/chai": "^4.3.14",
     "axios": "^1.6.8",
-    "chai": "^5.1.0",
-    "d3-common": "^0.0.1",
-    "did-jwt": "^8.0.2",
-    "follow-redirects": ">=1.15.6",
-    "mocha": "^10.3.0"
+    "follow-redirects": ">=1.15.6"
   }
 }
