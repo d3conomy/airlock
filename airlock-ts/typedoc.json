@@ -1,0 +1,15 @@
+
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": [
+        "./src/index.ts",
+        "./src/moonbase-servers/index.ts",
+        "./src/moonbase-api-client/index.ts",
+        "./src/airlock-config/index.ts",
+        "./src/id-reference-factory/index.ts",
+    ],
+    "entryPointStrategy": "expand",
+    "sort": ["alphabetical"],
+    "name": "Airlock",
+    "exclude": ["node_modules/**", "test/**", ]
+}
