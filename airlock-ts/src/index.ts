@@ -1,4 +1,4 @@
-import { IdReferenceFactory, IdReferenceFormats, MoonbaseId, SystemId, IdReferenceTypes } from "./id-reference-factory/index.js";
+import { IdReferenceFactory, SystemId, IdReferenceTypes } from "d3-artifacts";
 import { MoonbaseServers, MoonbaseServerUrl } from "./moonbase-servers/index.js";
 import { AirlockConfig } from "./airlock-config/index.js";
 

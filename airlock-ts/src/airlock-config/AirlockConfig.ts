@@ -1,14 +1,7 @@
-
-
-enum LogLevel {
-    Debug = "debug",
-    Info = "info",
-    Warn = "warn",
-    Error = "error"
-}
+import { LogLevel } from "d3-artifacts";
 
 class AirlockConfig {
-    public logLevel: LogLevel = LogLevel.Info;
+    public logLevel: LogLevel = LogLevel.INFO;
 }
 
 export {
